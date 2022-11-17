@@ -1,0 +1,4 @@
+---
+# vars file for install_apache
+source_file: roles/install_apache/files/index.html
+destin_file: /var/www/html

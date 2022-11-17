@@ -1,0 +1,20 @@
+version: "3"
+services:
+    nginx:
+        build: ./centos-nginx
+        ports:
+            - 8092:80
+        volumes:
+           - ./centos-nginx/html:/opt/nginx/www.test.com
+           - ./centos-nginx/logs:/opt/nginx/logs
+        container_name: nginx_guskov
+
+    apache:
+        build: ./debian-apache2
+        ports:
+            - 8090:80
+        volumes:
+           - ./debian-apache2/html:/opt/apache2/www.test.com 
+           - ./debian-apache2/logs:/opt/apache2/logs
+        container_name: apache2_guskov
+            

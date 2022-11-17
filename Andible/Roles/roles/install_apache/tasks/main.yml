@@ -1,0 +1,32 @@
+---
+# tasks file for install_apache
+- name: Check version Linux
+  debug: var=ansible_os_family
+ 
+- block:
+ 
+  - name: Install Apache web Server Debian
+    apt: name=apache2 update_cache=yes state=latest
+ 
+  - name: Start Debian
+    service: name=apache2 state=started enabled=yes
+
+  when: ansible_os_family == "Debian"
+ 
+- block:
+ 
+  - name: Install Apache web Server CentOS
+    yum: name=httpd update_cache=yes state=latest
+ 
+  - name: Start CentOS
+    service: name=httpd state=started enabled=yes
+
+  when: ansible_os_family == "CentOS"
+ 
+- name: Copy files in www CentOS&Debian
+  copy: src={{ source_file }}  dest={{ destin_file }} mode=0555
+  loop:
+    - "index.html"
+  notify:
+    - Restart Apache CentOS
+    - Restart Apache Debian

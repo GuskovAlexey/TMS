@@ -1,0 +1,46 @@
+version: "3"
+services:
+    nginx:
+        build: ./centos-nginx
+        image: nginx_test:1
+        ports:
+            - "8080:80"
+            - "4433:443"
+        volumes:
+           - ./centos-nginx/html:/opt/nginx/www.test.com
+           - ./centos-nginx/logs:/opt/nginx/logs
+        container_name: nginx_guskov
+        links: 
+            - "apache"
+        networks:
+            - net_0
+        restart: always
+        
+    apache:
+        build: ./debian-apache2
+        image: apache2_test:1
+        ports:
+            - "8081:80"
+            - "4432:443"
+        volumes:
+           - ./debian-apache2/html:/opt/apache2/www.test.com 
+           - ./debian-apache2/logs:/opt/apache2/logs
+        container_name: apache2_guskov
+        networks:
+            - net_0
+        restart: always
+        
+    haproxy:
+        build: ./haproxy
+        image: haproxy:test
+        ports:
+           - "8085:80"
+        container_name: haproxy
+        links:
+          - "nginx"
+          - "apache"
+        networks:
+          - net_0   
+
+networks:
+   net_0:
