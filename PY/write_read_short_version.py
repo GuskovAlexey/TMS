@@ -32,4 +32,6 @@ def menu():
                 write()
         else:
                 print("Exit")
+
 menu()
+

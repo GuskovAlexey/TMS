@@ -1,0 +1,76 @@
+Started by upstream project "apache_cd" build number 7
+originally caused by:
+ Started by user Admin
+Running as SYSTEM
+Building in workspace /var/lib/jenkins/workspace/apache_ci
+The recommended git tool is: NONE
+using credential 60a973b4-4953-4013-87ee-fac317f3c97a
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/apache_ci/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url git@github.com:GuskovAlexey/test.git # timeout=10
+Fetching upstream changes from git@github.com:GuskovAlexey/test.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.34.1'
+using GIT_SSH to set credentials 
+Verifying host key using known hosts file, will automatically accept unseen keys
+ > git fetch --tags --force --progress -- git@github.com:GuskovAlexey/test.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 57dee4c7b002bee88f5196053f624bb2f5afd59c (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 57dee4c7b002bee88f5196053f624bb2f5afd59c # timeout=10
+Commit message: "fix"
+ > git rev-list --no-walk 57dee4c7b002bee88f5196053f624bb2f5afd59c # timeout=10
+[apache_ci] $ /bin/sh -xe /tmp/jenkins14095186116288755348.sh
++ sudo docker build -t docker_apache:one --build-arg USERNAME=Alex ./docker
+Sending build context to Docker daemon  2.048kB
+
+Step 1/12 : FROM ubuntu:20.04
+ ---> 680e5dfb52c7
+Step 2/12 : ARG DEBIAN_FRONTEND=noninteractive
+ ---> Using cache
+ ---> ccb0da0f7bb9
+Step 3/12 : ARG USERNAME
+ ---> Using cache
+ ---> 1ec1f60d8b6a
+Step 4/12 : ENV ENV_USERNAME $USERNAME
+ ---> Using cache
+ ---> fb783f89b785
+Step 5/12 : RUN apt update && apt install -y apache2
+ ---> Using cache
+ ---> a9abf8d98066
+Step 6/12 : ENV APACHE_RUN_USER www-data
+ ---> Using cache
+ ---> d39950115a98
+Step 7/12 : ENV APACHE_RUN_GROUP www-data
+ ---> Using cache
+ ---> 606ad29adec2
+Step 8/12 : ENV APACHE_LOG_DIR /var/log/apache2
+ ---> Using cache
+ ---> 97e6204eba46
+Step 9/12 : ENV APACHE_RUN_DIR /var/www/html
+ ---> Using cache
+ ---> 6279ca1cd70f
+Step 10/12 : RUN echo "Hello, $ENV_USERNAME" > /var/www/html/index.html
+ ---> Using cache
+ ---> 748a2f8c0587
+Step 11/12 : ENTRYPOINT ["/usr/sbin/apache2"]
+ ---> Using cache
+ ---> ae600d1ee31a
+Step 12/12 : CMD ["-D", "FOREGROUND"]
+ ---> Using cache
+ ---> fc7ba41a6ece
+Successfully built fc7ba41a6ece
+Successfully tagged docker_apache:one
+Finished: SUCCESS
+
+
+
+
+Started by user Admin
+Running as SYSTEM
+Building in workspace /var/lib/jenkins/workspace/apache_cd
+[apache_cd] $ /bin/sh -xe /tmp/jenkins6960656168673481547.sh
++ sudo docker run -p 8085:80 -d --name docker_apache --rm docker_apache:one
+8fe5ddb518dea7aa6418c69660ad15a4cf0611f84f9af069cc55fc12b0d7a41c
+Triggering a new build of apache_ci
+Finished: SUCCESS
