@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    environment {
+        USER_GIT = "${params.GIT_USER}"
+        REPOSITORY_GIT = "${params.GIT_REPOSITORY}"
+        IMAGE_NAME = "${params.NAME_IMAGE}"
+        TAG_NAME = "${params.NAME_TAG}"
+        NAME_CONTAINER = "${params.CONTAINER_NAME}"
+       }
+
+    stages {
+        stage('CI') {
+            steps {
+                checkout([
+                    $class: 'GitSCM', branches: [[name: "master"]],
+                    doGenerateSubmoduleConfigurations: false,
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[credentialsId: '60a973b4-4953-4013-87ee-fac317f3c97a', url: "git@github.com:${USER_GIT}/${REPOSITORY_GIT}.git"]]
+                ])
+
+                script {
+                    sh "sudo docker build -t ${IMAGE_NAME}:${TAG_NAME} --build-arg DOCKER_IMAGES_NAME=${IMAGES_NAME} --build-arg DOCKER_IMAGES_TAG=${TAG_NAME} --build-arg  docker/."
+                }
+            }
+        }
+
+        stage('CD') {
+            steps {
+                script {
+                    sh "sudo docker run -d --rm --name ${NAME_CONTAINER} ${IMAGE_NAME} -p 8880:80 ${IMAGE_NAME}:${TAG_NAME}"
+                }
+            }
+        }
+    }
