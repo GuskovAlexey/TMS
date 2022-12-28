@@ -7,19 +7,28 @@
 # Basic configuration: datestamp e.g. YYYYMMDD
 DATE=$(date +"%Y-%m-%d-%H:%M")
 
-# What folder backup
-
-BACKUP_FOLDER="/var/www/html/"
-
-mkdir tmp/backup
-cp $BACKUP_FOLDER $TMP_BACKUP_DIR
-
 # Location of your backups 
 TMP_BACKUP_DIR="/tmp/backup"
 BACKUP_DIR="${TMP_BACKUP_DIR}/${DATE}"
 
 # Create a new directory into backup directory location for this date
 mkdir -p $BACKUP_DIR
+
+
+# ----------------------------
+# ---- BACKUP UPLOADS DIR ----
+# ----------------------------
+DOC_DIR="Test"
+mkdir -p $BACKUP_DIR/$DOC_DIR
+
+UPLOAD_DIR="/var/www/html"
+
+# Gzip folder /var/www/html
+echo $(date +"%b %d, %Y %H:%M:%S Begin zipping $UPLOAD_DIR")
+cd 
+tar czf "${BACKUP_DIR}/${DOC_DIR}.tar.gz" -P  $UPLOAD_DIR
+echo $(date +"%b %d, %Y %H:%M:%S End zipping $UPLOAD_DIR")
+
 
 # -------------------------------
 # ---- BEGIN UPLOADING TO S3 ----
@@ -35,7 +44,7 @@ echo $(date +"%b %d, %Y %H:%M:%S End uploading to S3")
 
 # Remove backup files after uploading to S3
 echo $(date +"%b %d, %Y %H:%M:%S Remove $TMP_BACKUP_DIR after uploading to S3")
-#rm -rf $TMP_BACKUP_DIR
+rm -rf $TMP_BACKUP_DIR
 
 # --------------------------------------
 # ---- DELETE OLD BACKUP FILE IN S3 ----
