@@ -4,6 +4,9 @@
 ##   Dayly backup, at 12:00 pm
 ##   0 0 * * * /home/lespot/script/backup_files_aws_S3.sh > /dev/null 2>&1
 
+# Number of storage copies
+COPIES=3
+
 # Basic configuration: datestamp e.g. YYYYMMDD
 DATE=$(date +"%Y-%m-%d-%H:%M")
 
@@ -53,7 +56,7 @@ flist=($(aws s3 ls ${S3_BUCKET} | awk '{print $4}'))
 len=${#flist[@]}
 
 # Loop to delete all files and keep 3 latest files
-for ((i = 0; i < $((len-3)); i++)); do
+for ((i = 0; i < $((len-$COPIES)); i++)); do
     ele0="${S3_BUCKET}${flist[$i]}"
     echo $(date +"%b %d, %Y %H:%M:%S Remove ${ele0}")
     aws s3 rm ${ele0}
