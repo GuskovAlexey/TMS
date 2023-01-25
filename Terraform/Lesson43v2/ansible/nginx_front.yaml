@@ -1,0 +1,22 @@
+- name: Configure webserver with nginx Front
+  hosts: all
+  become: True
+  tasks:
+    - name: install nginx Front
+      apt: name=nginx update_cache=yes
+
+    - name: copy nginx config file
+      copy: src=files/nginx_front.conf dest=/etc/nginx/sites-available/default
+
+    - name: enable configuration Front
+      file: >
+        dest=/etc/nginx/sites-enabled/default
+        src=/etc/nginx/sites-available/default
+        state=link
+
+    - name: copy index.html Front
+      template: src=files/index.html.j2 dest=/usr/share/nginx/html/index.html
+        mode=0644
+
+    - name: restart nginx Front
+      service: name=nginx state=restarted

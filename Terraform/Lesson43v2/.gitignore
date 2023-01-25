@@ -1,0 +1,11 @@
+#  Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+.terraform
+.terraform.tfstate.lock.info
+
+# Ignore CLI configuration files
+.terraformrc
