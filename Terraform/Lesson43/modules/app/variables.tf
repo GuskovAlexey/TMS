@@ -30,18 +30,18 @@ variable "ec2_type_db" {
 
 variable "ec2_ami_front" {
   type = string
-  default = "ami-0a261c0e5f51090b1"
+  default = "ami-03e08697c325f02ab"
 }
 
 variable "ec2_ami_back" {
   type = string
-  default = "ami-0a261c0e5f51090b1"
+  default = "ami-03e08697c325f02ab"
 }
 
 
 variable "ec2_ami_db" {
   type = string
-  default = "ami-0a261c0e5f51090b1"
+  default = "ami-03e08697c325f02ab"
 }
 
 variable "key_pairs_ec2" {

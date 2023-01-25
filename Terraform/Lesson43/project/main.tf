@@ -4,7 +4,6 @@ terraform {
     key = "dev/project/terraform.tfstate"
     region = "eu-central-1"
   }
-
 }
 
 # data "aws_availability_zones" "available" {
@@ -49,5 +48,5 @@ module "app" {
   subnet_id_back = module.network.private_subnet_ids[1]
   subnet_id_database = module.network.database_subnet_ids[2]
 
-  depends_on = [ module.network ]
+  depends_on = [ module.network  ]
 } 

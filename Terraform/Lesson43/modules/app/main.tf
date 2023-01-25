@@ -1,11 +1,3 @@
-# terraform {
-#   backend "s3" {
-#     bucket = "dos11-terraform-state"
-#     key = "dev/app/terraform.tfstate"
-#     region = "eu-central-1"
-#   }
-# }
-
 
 resource "aws_instance" "instance_front" {
   count         = "${var.ec2_count_front}"
@@ -18,14 +10,30 @@ resource "aws_instance" "instance_front" {
   key_name = "${var.key_pairs_ec2}"
 
   provisioner "local-exec" {
-    working_dir = "../ansible/front_nginx/"
-    command = "sleep 30 && ansible-playbook nginx.yaml -i '${self.public_ip},' -u ec2-user --ssh-common-args='-o StrictHostKeyChecking=no' --private-key ~/.ssh/aws-key.pem"
+    working_dir = "../ansible/"
+    command = "sleep 30 && ansible-playbook nginx_front.yaml -i '${self.public_ip},' -u ubuntu --ssh-common-args='-o StrictHostKeyChecking=no' --private-key ~/.ssh/aws-key.pem"
   }
 
   tags = {
     Name = "Front Instance"
   }
 }
+
+data "aws_instance" "front_instance_pub_ip" {
+  filter {
+    name   = "tag:Name"
+    values = ["Front Instance"]
+  }
+
+  filter {
+    name   = "instance-state-name"
+    values = ["running"]
+  }
+
+  depends_on = [ aws_instance.instance_front ]
+}
+
+
 
 resource "aws_instance" "instance_back" {
   count         = "${var.ec2_count_back}"
@@ -34,14 +42,23 @@ resource "aws_instance" "instance_back" {
   associate_public_ip_address = false
   vpc_security_group_ids = [aws_security_group.sg_backend.id]
   subnet_id =  "${var.subnet_id_back}"
-  depends_on = [aws_security_group.sg_backend]
   key_name = "${var.key_pairs_ec2}"
-  user_data     = <<-EOF
-                  #!/bin/bash
-                  apt-get update
-                  apt-get install nginx -y
-                  sudo service nginx start
-                EOF
+  depends_on = [aws_security_group.sg_backend, aws_instance.instance_front]
+
+  connection {
+    type     = "ssh"
+    bastion_host = data.aws_instance.front_instance_pub_ip.public_ip
+    bastion_user = "ubuntu"
+    bastion_private_key = file("~/.ssh/aws-key.pem")
+    user     = "ubuntu"
+    private_key = file("~/.ssh/aws-key.pem")
+    host     = self.private_ip
+  }
+
+  provisioner "local-exec" {
+    working_dir = "../ansible/"
+    command = "sleep 30 && ansible-playbook nginx_back.yaml -i '${self.public_ip},' -u ubuntu --ssh-common-args='-o StrictHostKeyChecking=no' --private-key ~/.ssh/aws-key.pem"
+  }
 
   tags = {
     Name = "Back Instance"
@@ -64,7 +81,7 @@ resource "aws_instance" "instance_db" {
 }
 
 resource "aws_security_group" "sg_frontend" {
-  name        = "frontend sg"
+  name        = "sg_frontend"
   description = "Security group for the frontend instances"
   vpc_id = "${var.vpc_id}"
  
@@ -88,7 +105,7 @@ resource "aws_security_group" "sg_frontend" {
   }
 }
 resource "aws_security_group" "sg_backend" {
-  name        = "backend sg"
+  name        = "backend"
   description = "Security group for the backend instances"
   vpc_id = "${var.vpc_id}"
 
@@ -138,6 +155,6 @@ resource "aws_security_group" "sg_database" {
   } 
   
   tags = { 
-    Name  = "Database SG" 
+    Name  = "Database sg" 
   } 
 }
