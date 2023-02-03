@@ -1,0 +1,6 @@
+---
+# tasks file for wordpress
+- include: 00_get_aws_info.yaml
+- include: 01_install.yml
+- include: 02_configure_apache.yml
+- include: 04_configure_wp.yml

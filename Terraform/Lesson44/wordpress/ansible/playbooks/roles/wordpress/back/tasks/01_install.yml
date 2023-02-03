@@ -1,0 +1,36 @@
+- name: Install packages
+  ansible.builtin.apt:
+    name: '{{ item }}'
+    state: present
+    update_cache: true
+  loop: '{{ wordpress_packages }}'
+
+- name: Install Required pip modules
+  pip:
+    name:
+      - PyMySQL
+    state: present
+    executable: pip3
+
+- name: Create folder for WP
+  ansible.builtin.file:
+    path: '{{ wordpress_www_folder }}'
+    owner: '{{ wordpress_www_user }}'
+    state: directory
+    mode: '0755'
+
+- name: 'Mount AWS EFS to {{ wordpress_www_folder }}'
+  ansible.posix.mount:
+    src: '{{ efs_address }}:/'
+    path: '{{ wordpress_www_folder }}'
+    opts: '{{ efs_mount_opts }}'
+    state: mounted
+    fstype: '{{ efs_type }}'
+  when: efs_address != ''
+
+- name: Download and Unarchive wordpress tar
+  ansible.builtin.unarchive:
+    src: '{{ worpress_source_tar_url }}'
+    dest: '{{ wordpress_www_folder}}'
+    extra_opts: '--strip-components=1'
+    remote_src: yes

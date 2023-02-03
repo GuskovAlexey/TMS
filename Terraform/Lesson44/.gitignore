@@ -1,0 +1,12 @@
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+.terraform
+.terraform.tfstate.lock.info
+
+# Ignore CLI configuration files
+.terraformrc
+
+set_cred_env.sh

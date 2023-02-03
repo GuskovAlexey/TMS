@@ -1,0 +1,5 @@
+---
+# tasks file for front
+- include: 00_get_aws_info.yml
+- include: 01_install.yml
+- include: 02_configure.yml

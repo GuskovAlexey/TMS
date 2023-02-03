@@ -1,0 +1,6 @@
+---
+# handlers file for wordpress
+- name: Restart mysql
+  ansible.builtin.service:
+    name: mysql
+    state: restarted

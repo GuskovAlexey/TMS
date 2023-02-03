@@ -1,0 +1,39 @@
+---
+# defaults file for wordpress
+# aws
+aws_region: eu-west-2
+aws_project_name: tms-wordpress 
+aws_db_instance: '{{ aws_project_name }}-mysql'
+
+wordpress_packages:
+  - apache2
+  - ghostscript
+  - libapache2-mod-php
+  # - mysql-server
+  # - python3
+  - python3-pip
+  - php
+  - php-bcmath
+  - php-curl
+  - php-imagick
+  - php-intl
+  - php-json
+  - php-mbstring
+  - php-mysql
+  - php-xml
+  - php-zip
+  - nfs-common
+
+wordpress_port: 80
+wordpress_www_user: www-data
+wordpress_www_folder: /opt/www/wordpress
+worpress_source_tar_url: https://wordpress.org/latest.tar.gz
+wordpress_apach_config_dst: /etc/apache2/sites-available/wordpress.conf
+wordpress_url: 
+wordpress_db_host: localhost
+wordpress_db_name: wordpress
+wordpress_db_user: wordpress
+wordpress_db_pass: wordpress
+
+efs_mount_opts: nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport
+efs_type: nfs4

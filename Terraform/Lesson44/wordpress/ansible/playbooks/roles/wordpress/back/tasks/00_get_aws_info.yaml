@@ -1,0 +1,9 @@
+- name: Debug
+  delegate_to: localhost
+  debug:
+    msg: '{{efs_address}}'
+
+- name: Debug
+  delegate_to: localhost
+  debug:
+    msg: '{{wordpress_db_host}}'
