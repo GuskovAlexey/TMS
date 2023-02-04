@@ -21,7 +21,11 @@ source "amazon-ebs" "ubuntu" {
   security_group_id = "${var.sg_allow_ssh_from_bastion}"
   ssh_bastion_host = "${var.pub_ip_bastion}"
   ssh_bastion_username = "ubuntu"
+<<<<<<< HEAD
   ssh_bastion_private_key_file = "~/.ssh/dos11-aws.pem"
+=======
+  ssh_bastion_private_key_file = "~/.ssh/dos11-aws"
+>>>>>>> a9ee19dc482fb044d7d9c7cefb2ad85565b944b5
   # ssh_bastion_agent_auth = true
   ssh_username = "ubuntu"
 

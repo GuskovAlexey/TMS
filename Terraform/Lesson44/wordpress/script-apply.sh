@@ -1,7 +1,10 @@
 #!/bin/bash
 
 cp /dev/null varspacker
+<<<<<<< HEAD
 cp /dev/null packer/front/variables.auto.pkrvars.hcl &&
+=======
+>>>>>>> a9ee19dc482fb044d7d9c7cefb2ad85565b944b5
 echo -e 'db_name = "wordpress" \ndb_user = "wordpress" \ndb_pass = "wordpress"' > packer/back/variables.auto.pkrvars.hcl &&
 
 
@@ -31,8 +34,13 @@ sed -n '/rds_address/p' ../varspacker >> ../packer/back/variables.auto.pkrvars.h
 cd ../ALB
 terraform apply -auto-approve  &&
 terraform output -state=<terraform.tfstate> -json >> ../varspacker &&
+<<<<<<< HEAD
 sed -n '/nginx_wordpress_conf_wordpress_back_lb_url/p' ../varspacker >> ../packer/front/variables.auto.pkrvars.hcl &&
 # add before rds_address http://
 
 cd ../launch-templates &&
 terraform apply -auto-approve 
+=======
+sed -n '/nginx_wordpress_conf_wordpress_back_lb_url/p' ../varspacker >> ../packer/back/variables.auto.pkrvars.hcl 
+# add before rds_address http://
+>>>>>>> a9ee19dc482fb044d7d9c7cefb2ad85565b944b5
