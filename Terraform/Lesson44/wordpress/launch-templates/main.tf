@@ -29,13 +29,6 @@ resource "aws_launch_template" "front_lt" {
   key_name = data.aws_key_pair.key_name.key_name
   vpc_security_group_ids = [ data.aws_security_group.ssh_from_bastion.id ]  
 
-<<<<<<< HEAD
-=======
-  tag {
-    key = "Name"
-    value = "front-template"
-  }
->>>>>>> a9ee19dc482fb044d7d9c7cefb2ad85565b944b5
 }
 
 resource "aws_launch_template" "back_lt" {
@@ -45,11 +38,4 @@ resource "aws_launch_template" "back_lt" {
   key_name = data.aws_key_pair.key_name.key_name
   vpc_security_group_ids = [ data.aws_security_group.ssh_from_bastion.id ]  
 
-<<<<<<< HEAD
-=======
-  tag {
-    key = "Name"
-    value = "back-template"
-  }
->>>>>>> a9ee19dc482fb044d7d9c7cefb2ad85565b944b5
 }

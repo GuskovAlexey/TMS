@@ -1,11 +1,9 @@
 db_name = "wordpress" 
 db_user = "wordpress" 
 db_pass = "wordpress"
-<<<<<<< HEAD
-vpc_id = "vpc-075ceaaa4a734037a"
-subnet_id_priv = "subnet-0f74dcb9ce9719982"
-pub_ip_bastion = "35.177.223.145"
-sg_allow_ssh_from_bastion = "sg-0592e8492623061be"
-efs_address = "fs-0031d859f5c6e4d6b.efs.eu-west-2.amazonaws.com"
+vpc_id = "vpc-0707d4871f36047a7"
+subnet_id_priv = "subnet-0fa6cc860498fa1c6"
+pub_ip_bastion = "3.9.170.138"
+sg_allow_ssh_from_bastion = "sg-0b50c4b77bb6ee399"
+efs_address = "fs-0eb184cdc6b8f7954.efs.eu-west-2.amazonaws.com"
 rds_address = "wordpress.cwel5221jg3x.eu-west-2.rds.amazonaws.com:3306"
->>>>>>> a9ee19dc482fb044d7d9c7cefb2ad85565b944b5

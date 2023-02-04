@@ -6,7 +6,7 @@ terraform destroy -auto-approve &&
 cd ../launch-templates &&
 terraform destroy -auto-approve &&
 
-cd ../ALB
+cd ../ALB &&
 terraform destroy -auto-approve &&
 
 cd ../services &&

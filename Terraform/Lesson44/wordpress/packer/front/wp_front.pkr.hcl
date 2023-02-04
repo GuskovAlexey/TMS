@@ -17,7 +17,7 @@ source "amazon-ebs" "ubuntu" {
   }
 
   vpc_id  = "${var.vpc_id}"
-  subnet_id = "${var.subnet_id_pub}"
+  subnet_id = "${var.subnet_id_priv}"
   security_group_id = "${var.sg_allow_ssh_from_bastion}"
   ssh_bastion_host = "${var.pub_ip_bastion}"
   ssh_bastion_username = "ubuntu"
@@ -42,8 +42,11 @@ build {
     ]
 
     provisioner "ansible" {
+        ansible_env_vars = [
+          "ANSIBLE_SSH_ARGS='-o PubkeyAcceptedKeyTypes=+ssh-rsa -o HostkeyAlgorithms=+ssh-rsa'"
+    ]
         playbook_file = "../../ansible/playbooks/wp_front.yaml"
-        extra_arguments = ["--extra-vars", "nginx_wordpress_conf_wordpress_back_lb_url=${var.nginx_wordpress_conf_wordpress_back_lb_url} "]
+        extra_arguments = [ "--ssh-extra-args", "-o PubkeyAcceptedKeyTypes=+ssh-rsa","--extra-vars", "nginx_wordpress_conf_wordpress_back_lb_url=${var.nginx_wordpress_conf_wordpress_back_lb_url}"]
     }
 
     

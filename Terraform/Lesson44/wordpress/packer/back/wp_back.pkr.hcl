@@ -21,13 +21,10 @@ source "amazon-ebs" "ubuntu" {
   security_group_id = "${var.sg_allow_ssh_from_bastion}"
   ssh_bastion_host = "${var.pub_ip_bastion}"
   ssh_bastion_username = "ubuntu"
-<<<<<<< HEAD
   ssh_bastion_private_key_file = "~/.ssh/dos11-aws.pem"
-=======
-  ssh_bastion_private_key_file = "~/.ssh/dos11-aws"
->>>>>>> a9ee19dc482fb044d7d9c7cefb2ad85565b944b5
   # ssh_bastion_agent_auth = true
   ssh_username = "ubuntu"
+  # associate_public_ip_address = true
 
   source_ami_filter {
     filters = {
@@ -46,8 +43,11 @@ build {
     ]
 
     provisioner "ansible" {
+        ansible_env_vars = [
+          "ANSIBLE_SSH_ARGS='-o PubkeyAcceptedKeyTypes=+ssh-rsa -o HostkeyAlgorithms=+ssh-rsa'"
+    ]
         playbook_file = "../../ansible/playbooks/wp_back.yaml"
-        extra_arguments = ["--extra-vars", "efs_address=${var.efs_address} wordpress_db_host=${var.rds_address} wordpress_db_name=${var.db_name} wordpress_db_user=${var.db_user} wordpress_db_pass=${var.db_pass}"]
+        extra_arguments = [ "--ssh-extra-args", "-o PubkeyAcceptedKeyTypes=+ssh-rsa","--extra-vars", "efs_address=${var.efs_address} wordpress_db_host=${var.rds_address} wordpress_db_name=${var.db_name} wordpress_db_user=${var.db_user} wordpress_db_pass=${var.db_pass}"]
     }
 
     
