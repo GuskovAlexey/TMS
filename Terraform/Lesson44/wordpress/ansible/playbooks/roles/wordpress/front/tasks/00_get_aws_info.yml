@@ -1,0 +1,19 @@
+# - name: Get AWS info
+#   become: false
+#   block:
+#   - name: Gather information about back ALB
+#     delegate_to: localhost
+#     community.aws.elb_application_lb_info:
+#       names: '{{ aws_project_name }}-back'
+#       region: '{{ aws_region }}'
+#     register: alb_result
+
+#   - name: Set facts
+#     delegate_to: localhost
+#     ansible.builtin.set_fact:
+#       nginx_wordpress_conf_wordpress_back_lb_url: "{{ alb_result | json_query('load_balancers[*].dns_name') | first }}"
+
+  - ansible.builtin.debug:
+      var: nginx_wordpress_conf_wordpress_back_lb_url
+    delegate_to: localhost
+      

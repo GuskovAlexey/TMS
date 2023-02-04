@@ -1,0 +1,30 @@
+private_subnets = [
+  "subnet-009effc04e8186390",
+  "subnet-0f029f9f53902e87b",
+  "subnet-0f02fd48e8ebd426a",
+]
+public_subnets = [
+  "subnet-04ecd718333edef8d",
+  "subnet-0ef5ec82234a47fa3",
+  "subnet-0b2ab6ba6deb5aab9",
+]
+subnet_id_priv = "subnet-009effc04e8186390"
+subnet_id_pub = "subnet-04ecd718333edef8d"
+subnets_cidr_blocks = {
+  "private" = [
+    "10.0.96.0/19",
+    "10.0.128.0/19",
+    "10.0.160.0/19",
+  ]
+  "public" = [
+    "10.0.0.0/19",
+    "10.0.32.0/19",
+    "10.0.64.0/19",
+  ]
+}
+vpc_id = "vpc-004b7bd007a06bfcd"
+pub_ip_bastion = "13.40.166.227"
+sg_allow_ssh_from_bastion = "sg-04e4c3ad5dbcf2e9f"
+efs_address = "fs-0cccee1d323b8f31d.efs.eu-west-2.amazonaws.com"
+rds_address = "wordpress.cwel5221jg3x.eu-west-2.rds.amazonaws.com"
+nginx_wordpress_conf_wordpress_back_lb_url = "alb-backend-1438613782.eu-west-2.elb.amazonaws.com"

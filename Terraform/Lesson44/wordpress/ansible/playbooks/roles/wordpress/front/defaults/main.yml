@@ -1,0 +1,14 @@
+---
+# defaults file for front
+aws_project_name: tms-wordpress 
+aws_region: 'eu-west-2'
+
+nginx_packages:
+  - nginx
+
+nginx_wordpress_conf_src: nginx_wordpress.conf.j2
+nginx_wordpress_conf_dst: /etc/nginx/sites-available/wordpress.conf
+
+nginx_wordpress_conf_listen_port: 80
+nginx_wordpress_conf_server_name: wordpress.local
+nginx_wordpress_conf_wordpress_back_lb_url: NA

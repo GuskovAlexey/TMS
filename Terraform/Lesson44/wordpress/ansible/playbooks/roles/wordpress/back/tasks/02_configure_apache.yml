@@ -1,0 +1,22 @@
+- name: Copy wordpress.conf
+  ansible.builtin.template:
+    src: wordpress.conf.j2
+    dest: '{{ wordpress_apach_config_dst }}'
+    owner: '{{ wordpress_www_user }}'
+  # notify: Restart nginx
+
+- name: Enable wordpress Apache site
+  ansible.builtin.command: sudo a2ensite wordpress
+
+- name: Enable the Apache2 module rewrite
+  community.general.apache2_module:
+    state: present
+    name: rewrite
+
+- name: Disable default Apache site
+  ansible.builtin.command: sudo a2dissite 000-default
+
+- name: Restart Apache service
+  ansible.builtin.service:
+    name: apache2
+    state: restarted
