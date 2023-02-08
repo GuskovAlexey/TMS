@@ -1,0 +1,1398 @@
+
+Apply complete! Resources: 20 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+private_subnets = [
+  "subnet-0d6c7b0950ef6fc87",
+  "subnet-0ca5d1608921f01ff",
+  "subnet-09385db14b2941c25",
+]
+public_subnets = [
+  "subnet-098e4ce111b85998e",
+  "subnet-042f602e67ecc0b53",
+  "subnet-0ff1e04feb139440f",
+]
+subnet_id_priv = "subnet-0d6c7b0950ef6fc87"
+subnet_id_pub = "subnet-098e4ce111b85998e"
+subnets_cidr_blocks = {
+  "private" = [
+    "10.0.96.0/19",
+    "10.0.128.0/19",
+    "10.0.160.0/19",
+  ]
+  "public" = [
+    "10.0.0.0/19",
+    "10.0.32.0/19",
+    "10.0.64.0/19",
+  ]
+}
+vpc_id = "vpc-0756a85ecdc38dd28"
+data.terraform_remote_state.network: Reading...
+data.terraform_remote_state.network: Read complete after 0s
+data.aws_key_pair.key_name: Reading...
+data.aws_ami.ubuntu: Reading...
+data.aws_key_pair.key_name: Read complete after 0s [id=key-0291f41661b48d7e4]
+data.aws_ami.ubuntu: Read complete after 0s [id=ami-00de6c6491fdd3ef5]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_instance.bastion will be created
+  + resource "aws_instance" "bastion" {
+      + ami                                  = "ami-00de6c6491fdd3ef5"
+      + arn                                  = (known after apply)
+      + associate_public_ip_address          = true
+      + availability_zone                    = (known after apply)
+      + cpu_core_count                       = (known after apply)
+      + cpu_threads_per_core                 = (known after apply)
+      + disable_api_stop                     = (known after apply)
+      + disable_api_termination              = (known after apply)
+      + ebs_optimized                        = (known after apply)
+      + get_password_data                    = false
+      + host_id                              = (known after apply)
+      + host_resource_group_arn              = (known after apply)
+      + iam_instance_profile                 = (known after apply)
+      + id                                   = (known after apply)
+      + instance_initiated_shutdown_behavior = (known after apply)
+      + instance_state                       = (known after apply)
+      + instance_type                        = "t2.micro"
+      + ipv6_address_count                   = (known after apply)
+      + ipv6_addresses                       = (known after apply)
+      + key_name                             = "dos11-aws"
+      + monitoring                           = (known after apply)
+      + outpost_arn                          = (known after apply)
+      + password_data                        = (known after apply)
+      + placement_group                      = (known after apply)
+      + placement_partition_number           = (known after apply)
+      + primary_network_interface_id         = (known after apply)
+      + private_dns                          = (known after apply)
+      + private_ip                           = (known after apply)
+      + public_dns                           = (known after apply)
+      + public_ip                            = (known after apply)
+      + secondary_private_ips                = (known after apply)
+      + security_groups                      = (known after apply)
+      + source_dest_check                    = true
+      + subnet_id                            = "subnet-098e4ce111b85998e"
+      + tags                                 = {
+          + "Name" = "bastionhost"
+        }
+      + tags_all                             = {
+          + "Environment" = "default"
+          + "Name"        = "bastionhost"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + tenancy                              = (known after apply)
+      + user_data                            = (known after apply)
+      + user_data_base64                     = (known after apply)
+      + user_data_replace_on_change          = false
+      + vpc_security_group_ids               = (known after apply)
+
+      + capacity_reservation_specification {
+          + capacity_reservation_preference = (known after apply)
+
+          + capacity_reservation_target {
+              + capacity_reservation_id                 = (known after apply)
+              + capacity_reservation_resource_group_arn = (known after apply)
+            }
+        }
+
+      + ebs_block_device {
+          + delete_on_termination = (known after apply)
+          + device_name           = (known after apply)
+          + encrypted             = (known after apply)
+          + iops                  = (known after apply)
+          + kms_key_id            = (known after apply)
+          + snapshot_id           = (known after apply)
+          + tags                  = (known after apply)
+          + throughput            = (known after apply)
+          + volume_id             = (known after apply)
+          + volume_size           = (known after apply)
+          + volume_type           = (known after apply)
+        }
+
+      + enclave_options {
+          + enabled = (known after apply)
+        }
+
+      + ephemeral_block_device {
+          + device_name  = (known after apply)
+          + no_device    = (known after apply)
+          + virtual_name = (known after apply)
+        }
+
+      + maintenance_options {
+          + auto_recovery = (known after apply)
+        }
+
+      + metadata_options {
+          + http_endpoint               = (known after apply)
+          + http_put_response_hop_limit = (known after apply)
+          + http_tokens                 = (known after apply)
+          + instance_metadata_tags      = (known after apply)
+        }
+
+      + network_interface {
+          + delete_on_termination = (known after apply)
+          + device_index          = (known after apply)
+          + network_card_index    = (known after apply)
+          + network_interface_id  = (known after apply)
+        }
+
+      + private_dns_name_options {
+          + enable_resource_name_dns_a_record    = (known after apply)
+          + enable_resource_name_dns_aaaa_record = (known after apply)
+          + hostname_type                        = (known after apply)
+        }
+
+      + root_block_device {
+          + delete_on_termination = (known after apply)
+          + device_name           = (known after apply)
+          + encrypted             = (known after apply)
+          + iops                  = (known after apply)
+          + kms_key_id            = (known after apply)
+          + tags                  = (known after apply)
+          + throughput            = (known after apply)
+          + volume_id             = (known after apply)
+          + volume_size           = (known after apply)
+          + volume_type           = (known after apply)
+        }
+    }
+
+  # aws_security_group.allow_ssh will be created
+  + resource "aws_security_group" "allow_ssh" {
+      + arn                    = (known after apply)
+      + description            = "Allow SSH inbound traffic"
+      + egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 0
+              + ipv6_cidr_blocks = [
+                  + "::/0",
+                ]
+              + prefix_list_ids  = []
+              + protocol         = "-1"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 0
+            },
+        ]
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = "SSH from all"
+              + from_port        = 22
+              + ipv6_cidr_blocks = [
+                  + "::/0",
+                ]
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 22
+            },
+        ]
+      + name                   = "allow_ssh"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "allow_ssh"
+        }
+      + tags_all               = {
+          + "Environment" = "default"
+          + "Name"        = "allow_ssh"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + vpc_id                 = "vpc-0756a85ecdc38dd28"
+    }
+
+  # aws_security_group.allow_ssh_from_bastion will be created
+  + resource "aws_security_group" "allow_ssh_from_bastion" {
+      + arn                    = (known after apply)
+      + description            = "allow_ssh_from_bastion"
+      + egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 0
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "-1"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 0
+            },
+        ]
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = []
+              + description      = ""
+              + from_port        = 22
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = (known after apply)
+              + self             = false
+              + to_port          = 22
+            },
+        ]
+      + name                   = "allow_ssh_from_bastion"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "allow_ssh_from_bastion"
+        }
+      + tags_all               = {
+          + "Environment" = "default"
+          + "Name"        = "allow_ssh_from_bastion"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + vpc_id                 = "vpc-0756a85ecdc38dd28"
+    }
+
+Plan: 3 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + pub_ip_bastion            = (known after apply)
+  + sg_allow_ssh_from_bastion = (known after apply)
+aws_security_group.allow_ssh: Creating...
+aws_security_group.allow_ssh: Creation complete after 2s [id=sg-0fb736cc7684e33de]
+aws_security_group.allow_ssh_from_bastion: Creating...
+aws_instance.bastion: Creating...
+aws_security_group.allow_ssh_from_bastion: Creation complete after 2s [id=sg-03c6c69538b58d89c]
+aws_instance.bastion: Still creating... [10s elapsed]
+aws_instance.bastion: Still creating... [20s elapsed]
+aws_instance.bastion: Still creating... [30s elapsed]
+aws_instance.bastion: Creation complete after 32s [id=i-005279c2137c7489c]
+
+Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+pub_ip_bastion = "18.130.93.160"
+sg_allow_ssh_from_bastion = "sg-03c6c69538b58d89c"
+data.terraform_remote_state.network: Reading...
+data.terraform_remote_state.network: Read complete after 0s
+data.aws_availability_zones.available: Reading...
+data.aws_availability_zones.available: Read complete after 0s [id=eu-west-2]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_db_instance.default will be created
+  + resource "aws_db_instance" "default" {
+      + address                               = (known after apply)
+      + allocated_storage                     = 10
+      + apply_immediately                     = false
+      + arn                                   = (known after apply)
+      + auto_minor_version_upgrade            = true
+      + availability_zone                     = (known after apply)
+      + backup_retention_period               = (known after apply)
+      + backup_window                         = (known after apply)
+      + ca_cert_identifier                    = (known after apply)
+      + character_set_name                    = (known after apply)
+      + copy_tags_to_snapshot                 = false
+      + db_name                               = "wordpress"
+      + db_subnet_group_name                  = (known after apply)
+      + delete_automated_backups              = true
+      + endpoint                              = (known after apply)
+      + engine                                = "mysql"
+      + engine_version                        = "8.0.30"
+      + engine_version_actual                 = (known after apply)
+      + hosted_zone_id                        = (known after apply)
+      + id                                    = (known after apply)
+      + identifier                            = "wordpress"
+      + identifier_prefix                     = (known after apply)
+      + instance_class                        = "db.t2.micro"
+      + iops                                  = (known after apply)
+      + kms_key_id                            = (known after apply)
+      + latest_restorable_time                = (known after apply)
+      + license_model                         = (known after apply)
+      + maintenance_window                    = (known after apply)
+      + monitoring_interval                   = 0
+      + monitoring_role_arn                   = (known after apply)
+      + multi_az                              = (known after apply)
+      + name                                  = (known after apply)
+      + nchar_character_set_name              = (known after apply)
+      + network_type                          = (known after apply)
+      + option_group_name                     = (known after apply)
+      + parameter_group_name                  = (known after apply)
+      + password                              = (sensitive value)
+      + performance_insights_enabled          = false
+      + performance_insights_kms_key_id       = (known after apply)
+      + performance_insights_retention_period = (known after apply)
+      + port                                  = (known after apply)
+      + publicly_accessible                   = false
+      + replica_mode                          = (known after apply)
+      + replicas                              = (known after apply)
+      + resource_id                           = (known after apply)
+      + skip_final_snapshot                   = true
+      + snapshot_identifier                   = (known after apply)
+      + status                                = (known after apply)
+      + storage_throughput                    = (known after apply)
+      + storage_type                          = (known after apply)
+      + tags_all                              = {
+          + "Environment" = "default"
+          + "Name"        = "dos11"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + timezone                              = (known after apply)
+      + username                              = "wordpress"
+      + vpc_security_group_ids                = (known after apply)
+    }
+
+  # aws_db_subnet_group.db_subnet_group will be created
+  + resource "aws_db_subnet_group" "db_subnet_group" {
+      + arn                     = (known after apply)
+      + description             = "Managed by Terraform"
+      + id                      = (known after apply)
+      + name                    = (known after apply)
+      + name_prefix             = (known after apply)
+      + subnet_ids              = [
+          + "subnet-09385db14b2941c25",
+          + "subnet-0ca5d1608921f01ff",
+          + "subnet-0d6c7b0950ef6fc87",
+        ]
+      + supported_network_types = (known after apply)
+      + tags_all                = {
+          + "Environment" = "default"
+          + "Name"        = "dos11"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+    }
+
+  # aws_efs_file_system.efs will be created
+  + resource "aws_efs_file_system" "efs" {
+      + arn                     = (known after apply)
+      + availability_zone_id    = (known after apply)
+      + availability_zone_name  = (known after apply)
+      + creation_token          = "wordpress"
+      + dns_name                = (known after apply)
+      + encrypted               = (known after apply)
+      + id                      = (known after apply)
+      + kms_key_id              = (known after apply)
+      + number_of_mount_targets = (known after apply)
+      + owner_id                = (known after apply)
+      + performance_mode        = (known after apply)
+      + size_in_bytes           = (known after apply)
+      + tags_all                = {
+          + "Environment" = "default"
+          + "Name"        = "dos11"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + throughput_mode         = "bursting"
+    }
+
+  # aws_efs_mount_target.private_target[0] will be created
+  + resource "aws_efs_mount_target" "private_target" {
+      + availability_zone_id   = (known after apply)
+      + availability_zone_name = (known after apply)
+      + dns_name               = (known after apply)
+      + file_system_arn        = (known after apply)
+      + file_system_id         = (known after apply)
+      + id                     = (known after apply)
+      + ip_address             = (known after apply)
+      + mount_target_dns_name  = (known after apply)
+      + network_interface_id   = (known after apply)
+      + owner_id               = (known after apply)
+      + security_groups        = (known after apply)
+      + subnet_id              = "subnet-0d6c7b0950ef6fc87"
+    }
+
+  # aws_efs_mount_target.private_target[1] will be created
+  + resource "aws_efs_mount_target" "private_target" {
+      + availability_zone_id   = (known after apply)
+      + availability_zone_name = (known after apply)
+      + dns_name               = (known after apply)
+      + file_system_arn        = (known after apply)
+      + file_system_id         = (known after apply)
+      + id                     = (known after apply)
+      + ip_address             = (known after apply)
+      + mount_target_dns_name  = (known after apply)
+      + network_interface_id   = (known after apply)
+      + owner_id               = (known after apply)
+      + security_groups        = (known after apply)
+      + subnet_id              = "subnet-0ca5d1608921f01ff"
+    }
+
+  # aws_efs_mount_target.private_target[2] will be created
+  + resource "aws_efs_mount_target" "private_target" {
+      + availability_zone_id   = (known after apply)
+      + availability_zone_name = (known after apply)
+      + dns_name               = (known after apply)
+      + file_system_arn        = (known after apply)
+      + file_system_id         = (known after apply)
+      + id                     = (known after apply)
+      + ip_address             = (known after apply)
+      + mount_target_dns_name  = (known after apply)
+      + network_interface_id   = (known after apply)
+      + owner_id               = (known after apply)
+      + security_groups        = (known after apply)
+      + subnet_id              = "subnet-09385db14b2941c25"
+    }
+
+  # aws_security_group.allow_efs will be created
+  + resource "aws_security_group" "allow_efs" {
+      + arn                    = (known after apply)
+      + description            = "allow_efs"
+      + egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 0
+              + ipv6_cidr_blocks = [
+                  + "::/0",
+                ]
+              + prefix_list_ids  = []
+              + protocol         = "-1"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 0
+            },
+        ]
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 2049
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 2049
+            },
+        ]
+      + name                   = "allow_efs"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "allow_efs"
+        }
+      + tags_all               = {
+          + "Environment" = "default"
+          + "Name"        = "allow_efs"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + vpc_id                 = "vpc-0756a85ecdc38dd28"
+    }
+
+  # aws_security_group.allow_mysql will be created
+  + resource "aws_security_group" "allow_mysql" {
+      + arn                    = (known after apply)
+      + description            = "allow_mysql"
+      + egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 0
+              + ipv6_cidr_blocks = [
+                  + "::/0",
+                ]
+              + prefix_list_ids  = []
+              + protocol         = "-1"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 0
+            },
+        ]
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 3306
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 3306
+            },
+        ]
+      + name                   = "allow_mysql"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "allow_mysql"
+        }
+      + tags_all               = {
+          + "Environment" = "default"
+          + "Name"        = "allow_mysql"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + vpc_id                 = "vpc-0756a85ecdc38dd28"
+    }
+
+Plan: 8 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + efs_address = (known after apply)
+  + rds_address = (known after apply)
+aws_db_subnet_group.db_subnet_group: Creating...
+aws_efs_file_system.efs: Creating...
+aws_security_group.allow_efs: Creating...
+aws_security_group.allow_mysql: Creating...
+aws_db_subnet_group.db_subnet_group: Creation complete after 1s [id=terraform-20230207133218296000000001]
+aws_security_group.allow_mysql: Creation complete after 3s [id=sg-03e42869bce2048b0]
+aws_db_instance.default: Creating...
+aws_security_group.allow_efs: Creation complete after 3s [id=sg-0c48e0b0526f123f5]
+aws_efs_file_system.efs: Creation complete after 6s [id=fs-0b3d75c7bf1dcc075]
+aws_efs_mount_target.private_target[2]: Creating...
+aws_efs_mount_target.private_target[1]: Creating...
+aws_efs_mount_target.private_target[0]: Creating...
+aws_db_instance.default: Still creating... [10s elapsed]
+aws_efs_mount_target.private_target[2]: Still creating... [10s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [10s elapsed]
+aws_efs_mount_target.private_target[1]: Still creating... [10s elapsed]
+aws_db_instance.default: Still creating... [20s elapsed]
+aws_efs_mount_target.private_target[2]: Still creating... [20s elapsed]
+aws_efs_mount_target.private_target[1]: Still creating... [20s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [20s elapsed]
+aws_db_instance.default: Still creating... [30s elapsed]
+aws_efs_mount_target.private_target[2]: Still creating... [30s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [30s elapsed]
+aws_efs_mount_target.private_target[1]: Still creating... [30s elapsed]
+aws_db_instance.default: Still creating... [40s elapsed]
+aws_efs_mount_target.private_target[2]: Still creating... [40s elapsed]
+aws_efs_mount_target.private_target[1]: Still creating... [40s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [40s elapsed]
+aws_db_instance.default: Still creating... [50s elapsed]
+aws_efs_mount_target.private_target[2]: Still creating... [50s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [50s elapsed]
+aws_efs_mount_target.private_target[1]: Still creating... [50s elapsed]
+aws_db_instance.default: Still creating... [1m0s elapsed]
+aws_efs_mount_target.private_target[2]: Still creating... [1m0s elapsed]
+aws_efs_mount_target.private_target[1]: Still creating... [1m0s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [1m0s elapsed]
+aws_db_instance.default: Still creating... [1m10s elapsed]
+aws_efs_mount_target.private_target[2]: Still creating... [1m10s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [1m10s elapsed]
+aws_efs_mount_target.private_target[1]: Still creating... [1m10s elapsed]
+aws_db_instance.default: Still creating... [1m20s elapsed]
+aws_efs_mount_target.private_target[2]: Still creating... [1m20s elapsed]
+aws_efs_mount_target.private_target[1]: Still creating... [1m20s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [1m20s elapsed]
+aws_efs_mount_target.private_target[1]: Creation complete after 1m24s [id=fsmt-0cebbc5cef366c9e9]
+aws_efs_mount_target.private_target[2]: Creation complete after 1m24s [id=fsmt-04ef7d112e7ae5ef5]
+aws_db_instance.default: Still creating... [1m30s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [1m30s elapsed]
+aws_db_instance.default: Still creating... [1m40s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [1m40s elapsed]
+aws_db_instance.default: Still creating... [1m50s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [1m50s elapsed]
+aws_db_instance.default: Still creating... [2m0s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [2m0s elapsed]
+aws_db_instance.default: Still creating... [2m10s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [2m10s elapsed]
+aws_db_instance.default: Still creating... [2m20s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [2m20s elapsed]
+aws_db_instance.default: Still creating... [2m30s elapsed]
+aws_efs_mount_target.private_target[0]: Still creating... [2m30s elapsed]
+aws_efs_mount_target.private_target[0]: Creation complete after 2m35s [id=fsmt-0c4cdf992d7a6fe3f]
+aws_db_instance.default: Still creating... [2m40s elapsed]
+aws_db_instance.default: Still creating... [2m50s elapsed]
+aws_db_instance.default: Still creating... [3m0s elapsed]
+aws_db_instance.default: Still creating... [3m10s elapsed]
+aws_db_instance.default: Still creating... [3m20s elapsed]
+aws_db_instance.default: Still creating... [3m30s elapsed]
+aws_db_instance.default: Still creating... [3m40s elapsed]
+aws_db_instance.default: Still creating... [3m50s elapsed]
+aws_db_instance.default: Still creating... [4m0s elapsed]
+aws_db_instance.default: Still creating... [4m10s elapsed]
+aws_db_instance.default: Still creating... [4m20s elapsed]
+aws_db_instance.default: Still creating... [4m30s elapsed]
+aws_db_instance.default: Creation complete after 4m37s [id=wordpress]
+
+Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+efs_address = "fs-0b3d75c7bf1dcc075.efs.eu-west-2.amazonaws.com"
+rds_address = "wordpress.cwel5221jg3x.eu-west-2.rds.amazonaws.com"
+data.terraform_remote_state.network: Reading...
+data.terraform_remote_state.network: Read complete after 0s
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_lb.alb_back will be created
+  + resource "aws_lb" "alb_back" {
+      + arn                        = (known after apply)
+      + arn_suffix                 = (known after apply)
+      + desync_mitigation_mode     = "defensive"
+      + dns_name                   = (known after apply)
+      + drop_invalid_header_fields = false
+      + enable_deletion_protection = false
+      + enable_http2               = true
+      + enable_waf_fail_open       = false
+      + id                         = (known after apply)
+      + idle_timeout               = 60
+      + internal                   = false
+      + ip_address_type            = (known after apply)
+      + load_balancer_type         = "application"
+      + name                       = "alb-backend"
+      + preserve_host_header       = false
+      + security_groups            = (known after apply)
+      + subnets                    = [
+          + "subnet-09385db14b2941c25",
+          + "subnet-0ca5d1608921f01ff",
+          + "subnet-0d6c7b0950ef6fc87",
+        ]
+      + tags                       = {
+          + "Name" = "alb_backend"
+        }
+      + tags_all                   = {
+          + "Environment" = "default"
+          + "Name"        = "alb_backend"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + vpc_id                     = (known after apply)
+      + zone_id                    = (known after apply)
+
+      + subnet_mapping {
+          + allocation_id        = (known after apply)
+          + ipv6_address         = (known after apply)
+          + outpost_id           = (known after apply)
+          + private_ipv4_address = (known after apply)
+          + subnet_id            = (known after apply)
+        }
+    }
+
+  # aws_lb.alb_front will be created
+  + resource "aws_lb" "alb_front" {
+      + arn                        = (known after apply)
+      + arn_suffix                 = (known after apply)
+      + desync_mitigation_mode     = "defensive"
+      + dns_name                   = (known after apply)
+      + drop_invalid_header_fields = false
+      + enable_deletion_protection = false
+      + enable_http2               = true
+      + enable_waf_fail_open       = false
+      + id                         = (known after apply)
+      + idle_timeout               = 60
+      + internal                   = false
+      + ip_address_type            = (known after apply)
+      + load_balancer_type         = "application"
+      + name                       = "alb-frontend"
+      + preserve_host_header       = false
+      + security_groups            = (known after apply)
+      + subnets                    = [
+          + "subnet-042f602e67ecc0b53",
+          + "subnet-098e4ce111b85998e",
+          + "subnet-0ff1e04feb139440f",
+        ]
+      + tags                       = {
+          + "Name" = "alb_frontend"
+        }
+      + tags_all                   = {
+          + "Environment" = "default"
+          + "Name"        = "alb_frontend"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + vpc_id                     = (known after apply)
+      + zone_id                    = (known after apply)
+
+      + subnet_mapping {
+          + allocation_id        = (known after apply)
+          + ipv6_address         = (known after apply)
+          + outpost_id           = (known after apply)
+          + private_ipv4_address = (known after apply)
+          + subnet_id            = (known after apply)
+        }
+    }
+
+  # aws_lb_listener.back_alb_lisener will be created
+  + resource "aws_lb_listener" "back_alb_lisener" {
+      + arn               = (known after apply)
+      + id                = (known after apply)
+      + load_balancer_arn = (known after apply)
+      + port              = 80
+      + protocol          = "HTTP"
+      + ssl_policy        = (known after apply)
+      + tags_all          = {
+          + "Environment" = "default"
+          + "Name"        = "dos11"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+
+      + default_action {
+          + order            = (known after apply)
+          + target_group_arn = (known after apply)
+          + type             = "forward"
+        }
+    }
+
+  # aws_lb_listener.front_alb_lisener will be created
+  + resource "aws_lb_listener" "front_alb_lisener" {
+      + arn               = (known after apply)
+      + id                = (known after apply)
+      + load_balancer_arn = (known after apply)
+      + port              = 80
+      + protocol          = "HTTP"
+      + ssl_policy        = (known after apply)
+      + tags_all          = {
+          + "Environment" = "default"
+          + "Name"        = "dos11"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+
+      + default_action {
+          + order            = (known after apply)
+          + target_group_arn = (known after apply)
+          + type             = "forward"
+        }
+    }
+
+  # aws_lb_target_group.tg_alb_back will be created
+  + resource "aws_lb_target_group" "tg_alb_back" {
+      + arn                                = (known after apply)
+      + arn_suffix                         = (known after apply)
+      + connection_termination             = false
+      + deregistration_delay               = "300"
+      + id                                 = (known after apply)
+      + ip_address_type                    = (known after apply)
+      + lambda_multi_value_headers_enabled = false
+      + load_balancing_algorithm_type      = (known after apply)
+      + name                               = "back-tg-alb"
+      + port                               = 80
+      + preserve_client_ip                 = (known after apply)
+      + protocol                           = "HTTP"
+      + protocol_version                   = (known after apply)
+      + proxy_protocol_v2                  = false
+      + slow_start                         = 0
+      + tags_all                           = {
+          + "Environment" = "default"
+          + "Name"        = "dos11"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + target_type                        = "instance"
+      + vpc_id                             = "vpc-0756a85ecdc38dd28"
+
+      + health_check {
+          + enabled             = (known after apply)
+          + healthy_threshold   = (known after apply)
+          + interval            = (known after apply)
+          + matcher             = (known after apply)
+          + path                = (known after apply)
+          + port                = (known after apply)
+          + protocol            = (known after apply)
+          + timeout             = (known after apply)
+          + unhealthy_threshold = (known after apply)
+        }
+
+      + stickiness {
+          + cookie_duration = (known after apply)
+          + cookie_name     = (known after apply)
+          + enabled         = (known after apply)
+          + type            = (known after apply)
+        }
+
+      + target_failover {
+          + on_deregistration = (known after apply)
+          + on_unhealthy      = (known after apply)
+        }
+    }
+
+  # aws_lb_target_group.tg_alb_front will be created
+  + resource "aws_lb_target_group" "tg_alb_front" {
+      + arn                                = (known after apply)
+      + arn_suffix                         = (known after apply)
+      + connection_termination             = false
+      + deregistration_delay               = "300"
+      + id                                 = (known after apply)
+      + ip_address_type                    = (known after apply)
+      + lambda_multi_value_headers_enabled = false
+      + load_balancing_algorithm_type      = (known after apply)
+      + name                               = "front-tg-alb"
+      + port                               = 80
+      + preserve_client_ip                 = (known after apply)
+      + protocol                           = "HTTP"
+      + protocol_version                   = (known after apply)
+      + proxy_protocol_v2                  = false
+      + slow_start                         = 0
+      + tags_all                           = {
+          + "Environment" = "default"
+          + "Name"        = "dos11"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + target_type                        = "instance"
+      + vpc_id                             = "vpc-0756a85ecdc38dd28"
+
+      + health_check {
+          + enabled             = true
+          + healthy_threshold   = 5
+          + interval            = 30
+          + matcher             = "200-499"
+          + path                = "/"
+          + port                = "traffic-port"
+          + protocol            = "HTTP"
+          + timeout             = 5
+          + unhealthy_threshold = 2
+        }
+
+      + stickiness {
+          + cookie_duration = (known after apply)
+          + cookie_name     = (known after apply)
+          + enabled         = (known after apply)
+          + type            = (known after apply)
+        }
+
+      + target_failover {
+          + on_deregistration = (known after apply)
+          + on_unhealthy      = (known after apply)
+        }
+    }
+
+  # aws_security_group.back_alb_sg will be created
+  + resource "aws_security_group" "back_alb_sg" {
+      + arn                    = (known after apply)
+      + description            = "Security group for ALB back"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 80
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 80
+            },
+        ]
+      + name                   = "back_alb_sg"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "back_alb_sg"
+        }
+      + tags_all               = {
+          + "Environment" = "default"
+          + "Name"        = "back_alb_sg"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + vpc_id                 = "vpc-0756a85ecdc38dd28"
+    }
+
+  # aws_security_group.front_alb_sg will be created
+  + resource "aws_security_group" "front_alb_sg" {
+      + arn                    = (known after apply)
+      + description            = "Security group for ALB front"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 80
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 80
+            },
+        ]
+      + name                   = "front_alb_sg"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "front_alb_sg"
+        }
+      + tags_all               = {
+          + "Environment" = "default"
+          + "Name"        = "front_alb_sg"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + vpc_id                 = "vpc-0756a85ecdc38dd28"
+    }
+
+Plan: 8 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + nginx_wordpress_conf_wordpress_back_lb_url = (known after apply)
+aws_lb_target_group.tg_alb_back: Creating...
+aws_security_group.back_alb_sg: Creating...
+aws_security_group.front_alb_sg: Creating...
+aws_lb_target_group.tg_alb_front: Creating...
+aws_lb_target_group.tg_alb_front: Creation complete after 1s [id=arn:aws:elasticloadbalancing:eu-west-2:959711192947:targetgroup/front-tg-alb/6b4db684bb4f1a8d]
+aws_lb_target_group.tg_alb_back: Creation complete after 1s [id=arn:aws:elasticloadbalancing:eu-west-2:959711192947:targetgroup/back-tg-alb/cac5c3326bbac88b]
+aws_security_group.back_alb_sg: Creation complete after 2s [id=sg-0c3d035b135fa192b]
+aws_security_group.front_alb_sg: Creation complete after 2s [id=sg-0e249f1410d985b87]
+aws_lb.alb_front: Creating...
+aws_lb.alb_back: Creating...
+aws_lb.alb_back: Still creating... [10s elapsed]
+aws_lb.alb_front: Still creating... [10s elapsed]
+aws_lb.alb_front: Still creating... [20s elapsed]
+aws_lb.alb_back: Still creating... [20s elapsed]
+aws_lb.alb_back: Still creating... [30s elapsed]
+aws_lb.alb_front: Still creating... [30s elapsed]
+aws_lb.alb_back: Still creating... [40s elapsed]
+aws_lb.alb_front: Still creating... [40s elapsed]
+aws_lb.alb_back: Still creating... [50s elapsed]
+aws_lb.alb_front: Still creating... [50s elapsed]
+aws_lb.alb_back: Still creating... [1m0s elapsed]
+aws_lb.alb_front: Still creating... [1m0s elapsed]
+aws_lb.alb_back: Still creating... [1m10s elapsed]
+aws_lb.alb_front: Still creating... [1m10s elapsed]
+aws_lb.alb_back: Still creating... [1m20s elapsed]
+aws_lb.alb_front: Still creating... [1m20s elapsed]
+aws_lb.alb_back: Still creating... [1m30s elapsed]
+aws_lb.alb_front: Still creating... [1m30s elapsed]
+aws_lb.alb_back: Still creating... [1m40s elapsed]
+aws_lb.alb_front: Still creating... [1m40s elapsed]
+aws_lb.alb_back: Still creating... [1m50s elapsed]
+aws_lb.alb_front: Still creating... [1m50s elapsed]
+aws_lb.alb_back: Still creating... [2m0s elapsed]
+aws_lb.alb_front: Still creating... [2m0s elapsed]
+aws_lb.alb_front: Creation complete after 2m2s [id=arn:aws:elasticloadbalancing:eu-west-2:959711192947:loadbalancer/app/alb-frontend/08a54c70c7045c69]
+aws_lb_listener.front_alb_lisener: Creating...
+aws_lb.alb_back: Creation complete after 2m2s [id=arn:aws:elasticloadbalancing:eu-west-2:959711192947:loadbalancer/app/alb-backend/4b5c8898ebc0283b]
+aws_lb_listener.back_alb_lisener: Creating...
+aws_lb_listener.front_alb_lisener: Creation complete after 0s [id=arn:aws:elasticloadbalancing:eu-west-2:959711192947:listener/app/alb-frontend/08a54c70c7045c69/6f20bccaa6b9bda4]
+aws_lb_listener.back_alb_lisener: Creation complete after 0s [id=arn:aws:elasticloadbalancing:eu-west-2:959711192947:listener/app/alb-backend/4b5c8898ebc0283b/8d4d3aec5b084dfe]
+
+Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+nginx_wordpress_conf_wordpress_back_lb_url = "alb-backend-1554719358.eu-west-2.elb.amazonaws.com"
+lespot@lespotpc:~/Documents/homework/Terraform/Lesson44/wordpress$ cd packer/back/
+lespot@lespotpc:~/Documents/homework/Terraform/Lesson44/wordpress/packer/back$ packer build .
+amazon-ebs.ubuntu: output will be in this color.
+
+==> amazon-ebs.ubuntu: Prevalidating any provided VPC information
+==> amazon-ebs.ubuntu: Prevalidating AMI Name: tms-wordpress-back-tepmlate
+    amazon-ebs.ubuntu: Found Image ID: ami-00de6c6491fdd3ef5
+==> amazon-ebs.ubuntu: Creating temporary keypair: packer_63e25562-b807-17e9-0462-4e3ad6163079
+==> amazon-ebs.ubuntu: Launching a source AWS instance...
+    amazon-ebs.ubuntu: Instance ID: i-097f2333465f23688
+==> amazon-ebs.ubuntu: Waiting for instance (i-097f2333465f23688) to become ready...
+==> amazon-ebs.ubuntu: Using SSH communicator to connect: 10.0.107.135
+==> amazon-ebs.ubuntu: Waiting for SSH to become available...
+==> amazon-ebs.ubuntu: Connected to SSH!
+==> amazon-ebs.ubuntu: Provisioning with Ansible...
+    amazon-ebs.ubuntu: Setting up proxy adapter for Ansible....
+==> amazon-ebs.ubuntu: Executing Ansible: ansible-playbook -e packer_build_name="ubuntu" -e packer_builder_type=amazon-ebs --ssh-extra-args '-o IdentitiesOnly=yes' --ssh-extra-args -o PubkeyAcceptedKeyTypes=+ssh-rsa --extra-vars efs_address=fs-0b3d75c7bf1dcc075.efs.eu-west-2.amazonaws.com wordpress_db_host=wordpress.cwel5221jg3x.eu-west-2.rds.amazonaws.com:3306 wordpress_db_name=wordpress wordpress_db_user=wordpress wordpress_db_pass=wordpress -e ansible_ssh_private_key_file=/tmp/ansible-key464752581 -i /tmp/packer-provisioner-ansible3477982017 /home/lespot/Documents/homework/Terraform/Lesson44/wordpress/ansible/playbooks/wp_back.yaml
+    amazon-ebs.ubuntu: [DEPRECATION WARNING]: "include" is deprecated, use include_tasks/import_tasks
+    amazon-ebs.ubuntu: instead. This feature will be removed in version 2.16. Deprecation warnings can
+    amazon-ebs.ubuntu:  be disabled by setting deprecation_warnings=False in ansible.cfg.
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: PLAY [all] *********************************************************************
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [Gathering Facts] *********************************************************
+    amazon-ebs.ubuntu: ok: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/back : Debug] **************************************************
+    amazon-ebs.ubuntu: ok: [default -> localhost] => {
+    amazon-ebs.ubuntu:     "msg": "fs-0b3d75c7bf1dcc075.efs.eu-west-2.amazonaws.com"
+    amazon-ebs.ubuntu: }
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/back : Debug] **************************************************
+    amazon-ebs.ubuntu: ok: [default -> localhost] => {
+    amazon-ebs.ubuntu:     "msg": "wordpress.cwel5221jg3x.eu-west-2.rds.amazonaws.com:3306"
+    amazon-ebs.ubuntu: }
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/back : Install packages] ***************************************
+    amazon-ebs.ubuntu: changed: [default] => (item=apache2)
+    amazon-ebs.ubuntu: changed: [default] => (item=ghostscript)
+    amazon-ebs.ubuntu: changed: [default] => (item=libapache2-mod-php)
+    amazon-ebs.ubuntu: changed: [default] => (item=python3-pip)
+    amazon-ebs.ubuntu: changed: [default] => (item=php)
+    amazon-ebs.ubuntu: changed: [default] => (item=php-bcmath)
+    amazon-ebs.ubuntu: changed: [default] => (item=php-curl)
+    amazon-ebs.ubuntu: changed: [default] => (item=php-imagick)
+    amazon-ebs.ubuntu: changed: [default] => (item=php-intl)
+    amazon-ebs.ubuntu: changed: [default] => (item=php-json)
+    amazon-ebs.ubuntu: changed: [default] => (item=php-mbstring)
+    amazon-ebs.ubuntu: changed: [default] => (item=php-mysql)
+    amazon-ebs.ubuntu: changed: [default] => (item=php-xml)
+    amazon-ebs.ubuntu: changed: [default] => (item=php-zip)
+    amazon-ebs.ubuntu: changed: [default] => (item=nfs-common)
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/back : Install Required pip modules] ***************************
+    amazon-ebs.ubuntu: changed: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/back : Create folder for WP] ***********************************
+    amazon-ebs.ubuntu: changed: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/back : Mount AWS EFS to /opt/www/wordpress] ********************
+    amazon-ebs.ubuntu: changed: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/back : Download and Unarchive wordpress tar] *******************
+    amazon-ebs.ubuntu: changed: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/back : Copy wordpress.conf] ************************************
+    amazon-ebs.ubuntu: changed: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/back : Enable wordpress Apache site] ***************************
+    amazon-ebs.ubuntu: changed: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/back : Enable the Apache2 module rewrite] **********************
+    amazon-ebs.ubuntu: changed: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/back : Disable default Apache site] ****************************
+    amazon-ebs.ubuntu: changed: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/back : Restart Apache service] *********************************
+    amazon-ebs.ubuntu: changed: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/back : Copy wp-config.php] *************************************
+    amazon-ebs.ubuntu: changed: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: PLAY RECAP *********************************************************************
+    amazon-ebs.ubuntu: default                    : ok=14   changed=11   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+    amazon-ebs.ubuntu:
+==> amazon-ebs.ubuntu: Stopping the source instance...
+    amazon-ebs.ubuntu: Stopping instance
+==> amazon-ebs.ubuntu: Waiting for the instance to stop...
+==> amazon-ebs.ubuntu: Creating AMI tms-wordpress-back-tepmlate from instance i-097f2333465f23688
+    amazon-ebs.ubuntu: AMI: ami-0e78b804f379f9e95
+==> amazon-ebs.ubuntu: Waiting for AMI to become ready...
+==> amazon-ebs.ubuntu: Skipping Enable AMI deprecation...
+==> amazon-ebs.ubuntu: Adding tags to AMI (ami-0e78b804f379f9e95)...
+==> amazon-ebs.ubuntu: Tagging snapshot: snap-0127cbc161008877f
+==> amazon-ebs.ubuntu: Creating AMI tags
+    amazon-ebs.ubuntu: Adding tag: "Name": "tms-wordpress-back-tepmlate"
+==> amazon-ebs.ubuntu: Creating snapshot tags
+==> amazon-ebs.ubuntu: Terminating the source AWS instance...
+==> amazon-ebs.ubuntu: Cleaning up any extra volumes...
+==> amazon-ebs.ubuntu: No volumes to clean up, skipping
+==> amazon-ebs.ubuntu: Deleting temporary keypair...
+Build 'amazon-ebs.ubuntu' finished after 7 minutes 32 seconds.
+
+==> Wait completed after 7 minutes 32 seconds
+
+==> Builds finished. The artifacts of successful builds are:
+--> amazon-ebs.ubuntu: AMIs were created:
+eu-west-2: ami-0e78b804f379f9e95
+
+lespot@lespotpc:~/Documents/homework/Terraform/Lesson44/wordpress/packer/back$ cd ../front/
+lespot@lespotpc:~/Documents/homework/Terraform/Lesson44/wordpress/packer/front$ packer build .
+amazon-ebs.ubuntu: output will be in this color.
+
+==> amazon-ebs.ubuntu: Prevalidating any provided VPC information
+==> amazon-ebs.ubuntu: Prevalidating AMI Name: tms-wordpress-front-tepmlate
+    amazon-ebs.ubuntu: Found Image ID: ami-00de6c6491fdd3ef5
+==> amazon-ebs.ubuntu: Creating temporary keypair: packer_63e2573b-b17f-19ad-d60c-07d57e0787a6
+==> amazon-ebs.ubuntu: Launching a source AWS instance...
+    amazon-ebs.ubuntu: Instance ID: i-0ef878e432f959fc1
+==> amazon-ebs.ubuntu: Waiting for instance (i-0ef878e432f959fc1) to become ready...
+==> amazon-ebs.ubuntu: Using SSH communicator to connect: 10.0.100.10
+==> amazon-ebs.ubuntu: Waiting for SSH to become available...
+==> amazon-ebs.ubuntu: Connected to SSH!
+==> amazon-ebs.ubuntu: Provisioning with Ansible...
+    amazon-ebs.ubuntu: Setting up proxy adapter for Ansible....
+==> amazon-ebs.ubuntu: Executing Ansible: ansible-playbook -e packer_build_name="ubuntu" -e packer_builder_type=amazon-ebs --ssh-extra-args '-o IdentitiesOnly=yes' --ssh-extra-args -o PubkeyAcceptedKeyTypes=+ssh-rsa --extra-vars nginx_wordpress_conf_wordpress_back_lb_url=http://alb-backend-1554719358.eu-west-2.elb.amazonaws.com -e ansible_ssh_private_key_file=/tmp/ansible-key952079692 -i /tmp/packer-provisioner-ansible384674126 /home/lespot/Documents/homework/Terraform/Lesson44/wordpress/ansible/playbooks/wp_front.yaml
+    amazon-ebs.ubuntu: [DEPRECATION WARNING]: "include" is deprecated, use include_tasks/import_tasks
+    amazon-ebs.ubuntu: instead. This feature will be removed in version 2.16. Deprecation warnings can
+    amazon-ebs.ubuntu:  be disabled by setting deprecation_warnings=False in ansible.cfg.
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: PLAY [all] *********************************************************************
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [Gathering Facts] *********************************************************
+    amazon-ebs.ubuntu: ok: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/front : ansible.builtin.debug] *********************************
+    amazon-ebs.ubuntu: ok: [default -> localhost] => {
+    amazon-ebs.ubuntu:     "nginx_wordpress_conf_wordpress_back_lb_url": "http://alb-backend-1554719358.eu-west-2.elb.amazonaws.com"
+    amazon-ebs.ubuntu: }
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/front : Install packages] **************************************
+    amazon-ebs.ubuntu: changed: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/front : Copy nginx_wordpress.conf] *****************************
+    amazon-ebs.ubuntu: changed: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/front : Enable virtual-host for wordpress] *********************
+    amazon-ebs.ubuntu: changed: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: TASK [wordpress/front : Disable default virtual-host] **************************
+    amazon-ebs.ubuntu: changed: [default]
+    amazon-ebs.ubuntu:
+    amazon-ebs.ubuntu: PLAY RECAP *********************************************************************
+    amazon-ebs.ubuntu: default                    : ok=6    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+    amazon-ebs.ubuntu:
+==> amazon-ebs.ubuntu: Stopping the source instance...
+    amazon-ebs.ubuntu: Stopping instance
+==> amazon-ebs.ubuntu: Waiting for the instance to stop...
+==> amazon-ebs.ubuntu: Creating AMI tms-wordpress-front-tepmlate from instance i-0ef878e432f959fc1
+    amazon-ebs.ubuntu: AMI: ami-0b774e97a6d6fb498
+==> amazon-ebs.ubuntu: Waiting for AMI to become ready...
+==> amazon-ebs.ubuntu: Skipping Enable AMI deprecation...
+==> amazon-ebs.ubuntu: Adding tags to AMI (ami-0b774e97a6d6fb498)...
+==> amazon-ebs.ubuntu: Tagging snapshot: snap-01bc3895700df5fe9
+==> amazon-ebs.ubuntu: Creating AMI tags
+    amazon-ebs.ubuntu: Adding tag: "Name": "tms-wordpress-front-tepmlate"
+==> amazon-ebs.ubuntu: Creating snapshot tags
+==> amazon-ebs.ubuntu: Terminating the source AWS instance...
+==> amazon-ebs.ubuntu: Cleaning up any extra volumes...
+==> amazon-ebs.ubuntu: No volumes to clean up, skipping
+==> amazon-ebs.ubuntu: Deleting temporary keypair...
+Build 'amazon-ebs.ubuntu' finished after 3 minutes 32 seconds.
+
+==> Wait completed after 3 minutes 32 seconds
+
+==> Builds finished. The artifacts of successful builds are:
+--> amazon-ebs.ubuntu: AMIs were created:
+eu-west-2: ami-0b774e97a6d6fb498
+
+lespot@lespotpc:~/Documents/homework/Terraform/Lesson44/wordpress/packer/front$ cd ../launch-templates
+bash: cd: ../launch-templates: No such file or directory
+lespot@lespotpc:~/Documents/homework/Terraform/Lesson44/wordpress/packer/front$ cd ../../launch-templates
+lespot@lespotpc:~/Documents/homework/Terraform/Lesson44/wordpress/launch-templates$ terraform apply -auto-approve
+data.aws_security_group.ssh_from_bastion: Reading...
+data.aws_key_pair.key_name: Reading...
+data.aws_ami.wordpress_front: Reading...
+data.aws_ami.wordpress_back: Reading...
+data.aws_key_pair.key_name: Read complete after 0s [id=key-0291f41661b48d7e4]
+data.aws_security_group.ssh_from_bastion: Read complete after 1s [id=sg-03c6c69538b58d89c]
+data.aws_ami.wordpress_back: Read complete after 1s [id=ami-0e78b804f379f9e95]
+data.aws_ami.wordpress_front: Read complete after 1s [id=ami-0b774e97a6d6fb498]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_launch_template.back_lt will be created
+  + resource "aws_launch_template" "back_lt" {
+      + arn                    = (known after apply)
+      + default_version        = (known after apply)
+      + id                     = (known after apply)
+      + image_id               = "ami-0e78b804f379f9e95"
+      + instance_type          = "t2.micro"
+      + key_name               = "dos11-aws"
+      + latest_version         = (known after apply)
+      + name                   = "back-template"
+      + name_prefix            = (known after apply)
+      + tags_all               = {
+          + "Environment" = "default"
+          + "Name"        = "dos11"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + vpc_security_group_ids = [
+          + "sg-03c6c69538b58d89c",
+        ]
+
+      + metadata_options {
+          + http_endpoint               = (known after apply)
+          + http_protocol_ipv6          = (known after apply)
+          + http_put_response_hop_limit = (known after apply)
+          + http_tokens                 = (known after apply)
+          + instance_metadata_tags      = (known after apply)
+        }
+    }
+
+  # aws_launch_template.front_lt will be created
+  + resource "aws_launch_template" "front_lt" {
+      + arn                    = (known after apply)
+      + default_version        = (known after apply)
+      + id                     = (known after apply)
+      + image_id               = "ami-0b774e97a6d6fb498"
+      + instance_type          = "t2.micro"
+      + key_name               = "dos11-aws"
+      + latest_version         = (known after apply)
+      + name                   = "front-template"
+      + name_prefix            = (known after apply)
+      + tags_all               = {
+          + "Environment" = "default"
+          + "Name"        = "dos11"
+          + "Project"     = "wordpress"
+          + "Terraform"   = "true"
+        }
+      + vpc_security_group_ids = [
+          + "sg-03c6c69538b58d89c",
+        ]
+
+      + metadata_options {
+          + http_endpoint               = (known after apply)
+          + http_protocol_ipv6          = (known after apply)
+          + http_put_response_hop_limit = (known after apply)
+          + http_tokens                 = (known after apply)
+          + instance_metadata_tags      = (known after apply)
+        }
+    }
+
+Plan: 2 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + ami_backend  = "ami-0e78b804f379f9e95"
+  + ami_frontend = "ami-0b774e97a6d6fb498"
+aws_launch_template.front_lt: Creating...
+aws_launch_template.back_lt: Creating...
+aws_launch_template.back_lt: Creation complete after 1s [id=lt-0fc2eeed6d6c51a0f]
+aws_launch_template.front_lt: Creation complete after 1s [id=lt-05891e2301364cfd3]
+
+Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+ami_backend = "ami-0e78b804f379f9e95"
+ami_frontend = "ami-0b774e97a6d6fb498"
+lespot@lespotpc:~/Documents/homework/Terraform/Lesson44/wordpress/launch-templates$ cd ../ASG
+lespot@lespotpc:~/Documents/homework/Terraform/Lesson44/wordpress/ASG$ terraform apply -auto-approve
+data.terraform_remote_state.network: Reading...
+data.terraform_remote_state.network: Read complete after 0s
+data.aws_launch_template.lt_front: Reading...
+data.aws_launch_template.lt_back: Reading...
+data.aws_lb_target_group.front_tg: Reading...
+data.aws_lb_target_group.back_tg: Reading...
+data.aws_launch_template.lt_front: Read complete after 0s [id=lt-05891e2301364cfd3]
+data.aws_launch_template.lt_back: Read complete after 0s [id=lt-0fc2eeed6d6c51a0f]
+data.aws_lb_target_group.back_tg: Read complete after 0s [id=arn:aws:elasticloadbalancing:eu-west-2:959711192947:targetgroup/back-tg-alb/cac5c3326bbac88b]
+data.aws_lb_target_group.front_tg: Read complete after 0s [id=arn:aws:elasticloadbalancing:eu-west-2:959711192947:targetgroup/front-tg-alb/6b4db684bb4f1a8d]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_autoscaling_group.asg_backend will be created
+  + resource "aws_autoscaling_group" "asg_backend" {
+      + arn                       = (known after apply)
+      + availability_zones        = (known after apply)
+      + default_cooldown          = (known after apply)
+      + desired_capacity          = 2
+      + force_delete              = false
+      + force_delete_warm_pool    = false
+      + health_check_grace_period = 300
+      + health_check_type         = (known after apply)
+      + id                        = (known after apply)
+      + max_size                  = 5
+      + metrics_granularity       = "1Minute"
+      + min_size                  = 2
+      + name                      = "asg_back"
+      + name_prefix               = (known after apply)
+      + protect_from_scale_in     = false
+      + service_linked_role_arn   = (known after apply)
+      + target_group_arns         = [
+          + "arn:aws:elasticloadbalancing:eu-west-2:959711192947:targetgroup/back-tg-alb/cac5c3326bbac88b",
+        ]
+      + vpc_zone_identifier       = [
+          + "subnet-09385db14b2941c25",
+          + "subnet-0ca5d1608921f01ff",
+          + "subnet-0d6c7b0950ef6fc87",
+        ]
+      + wait_for_capacity_timeout = "10m"
+
+      + launch_template {
+          + id   = "lt-0fc2eeed6d6c51a0f"
+          + name = (known after apply)
+        }
+
+      + tag {
+          + key                 = "Name"
+          + propagate_at_launch = true
+          + value               = "ec2instance_back"
+        }
+    }
+
+  # aws_autoscaling_group.asg_frontend will be created
+  + resource "aws_autoscaling_group" "asg_frontend" {
+      + arn                       = (known after apply)
+      + availability_zones        = (known after apply)
+      + default_cooldown          = (known after apply)
+      + desired_capacity          = 1
+      + force_delete              = false
+      + force_delete_warm_pool    = false
+      + health_check_grace_period = 300
+      + health_check_type         = (known after apply)
+      + id                        = (known after apply)
+      + max_size                  = 4
+      + metrics_granularity       = "1Minute"
+      + min_size                  = 1
+      + name                      = "asg_front"
+      + name_prefix               = (known after apply)
+      + protect_from_scale_in     = false
+      + service_linked_role_arn   = (known after apply)
+      + target_group_arns         = [
+          + "arn:aws:elasticloadbalancing:eu-west-2:959711192947:targetgroup/front-tg-alb/6b4db684bb4f1a8d",
+        ]
+      + vpc_zone_identifier       = [
+          + "subnet-042f602e67ecc0b53",
+          + "subnet-098e4ce111b85998e",
+          + "subnet-0ff1e04feb139440f",
+        ]
+      + wait_for_capacity_timeout = "10m"
+
+      + launch_template {
+          + id   = "lt-05891e2301364cfd3"
+          + name = (known after apply)
+        }
+
+      + tag {
+          + key                 = "Name"
+          + propagate_at_launch = true
+          + value               = "ec2instance_front}"
+        }
+    }
+
+Plan: 2 to add, 0 to change, 0 to destroy.
+aws_autoscaling_group.asg_frontend: Creating...
+aws_autoscaling_group.asg_backend: Creating...
+aws_autoscaling_group.asg_frontend: Still creating... [10s elapsed]
+aws_autoscaling_group.asg_backend: Still creating... [10s elapsed]
+aws_autoscaling_group.asg_frontend: Still creating... [20s elapsed]
+aws_autoscaling_group.asg_backend: Still creating... [20s elapsed]
+aws_autoscaling_group.asg_backend: Still creating... [30s elapsed]
+aws_autoscaling_group.asg_frontend: Still creating... [30s elapsed]
+aws_autoscaling_group.asg_frontend: Creation complete after 36s [id=asg_front]
+aws_autoscaling_group.asg_backend: Still creating... [40s elapsed]
+aws_autoscaling_group.asg_backend: Creation complete after 47s [id=asg_back]
+
+Apply complete! Resources: 2 added, 0 changed, 0 destroyed.

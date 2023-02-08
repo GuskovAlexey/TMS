@@ -1,0 +1,8 @@
+server {
+    listen {{ nginx_wordpress_conf_listen_port }};
+    server_name {{ nginx_wordpress_conf_server_name }};
+
+    location / {
+        proxy_pass {{ nginx_wordpress_conf_wordpress_back_lb_url }};
+    }
+}

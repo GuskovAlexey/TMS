@@ -1,0 +1,19 @@
+- name: Copy nginx_wordpress.conf
+  ansible.builtin.template:
+    src: '{{ nginx_wordpress_conf_src }}'
+    dest: '{{ nginx_wordpress_conf_dst }}'
+    mode: '0644'
+  # notify: Restart nginx
+
+- name: Enable virtual-host for wordpress
+  ansible.builtin.file:
+    src: '{{ nginx_wordpress_conf_dst }}'
+    dest: /etc/nginx/sites-enabled/wordpress.conf
+    state: link
+  # notify: Restart nginx
+
+- name: Disable default virtual-host
+  ansible.builtin.file:
+    dest: /etc/nginx/sites-enabled/default
+    state: absent
+  # notify: Restart nginx
