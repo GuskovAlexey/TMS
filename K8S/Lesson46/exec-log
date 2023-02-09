@@ -1,0 +1,310 @@
+###################### 1 Развернуть кластер Kubernetes с несколькими узлами.##################################
+espot@lespotpc:~/Documents/K8S/Kind-PODS/Kind$ bash kind_create.sh 
+Creating cluster "kind-lespot" ...
+ ✓ Ensuring node image (kindest/node:v1.25.3) 🖼 
+ ✓ Preparing nodes 📦 📦 📦  
+ ✓ Writing configuration 📜 
+ ✓ Starting control-plane 🕹️ 
+ ✓ Installing CNI 🔌 
+ ✓ Installing StorageClass 💾 
+ ✓ Joining worker nodes 🚜 
+Set kubectl context to "kind-kind-lespot"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-kind-lespot
+
+Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
+lespot@lespotpc:~/Documents/K8S/Kind-PODS/Kind$ kubectl cluster-info --context kind-kind-lespot
+^C
+lespot@lespotpc:~/Documents/K8S/Kind-PODS/Kind$ nano ~/.kube/config
+lespot@lespotpc:~/Documents/K8S/Kind-PODS/Kind$ alias kubectl='kubectl –insecure-skip-tls-verify' 
+lespot@lespotpc:~/Documents/K8S/Kind-PODS/Kind$ kubectl cluster-info --context kind-kind-lespot
+error: unknown command "–insecure-skip-tls-verify" for "kubectl"
+lespot@lespotpc:~/Documents/K8S/Kind-PODS/Kind$ alias kubectl='kubectl --insecure-skip-tls-verify' 
+lespot@lespotpc:~/Documents/K8S/Kind-PODS/Kind$ kubectl cluster-info --context kind-kind-lespot
+Kubernetes control plane is running at https://18.132.47.139:6443
+CoreDNS is running at https://18.132.47.139:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+lespot@lespotpc:~/Documents/K8S/Kind-PODS/Kind$ kind get nodes
+No kind nodes found for cluster "kind".
+lespot@lespotpc:~/Documents/K8S/Kind-PODS/Kind$ kubectl get nodes
+NAME                        STATUS   ROLES           AGE     VERSION
+kind-lespot-control-plane   Ready    control-plane   3m59s   v1.25.3
+kind-lespot-worker          Ready    <none>          3m30s   v1.25.3
+kind-lespot-worker2         Ready    <none>          3m30s   v1.25.3
+
+###################### Выполнить развертывание любого приложения в кластере с помощью: - Deployment.##################################
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl get nodes
+NAME                        STATUS   ROLES           AGE   VERSION
+kind-lespot-control-plane   Ready    control-plane   32m   v1.25.3
+kind-lespot-worker          Ready    <none>          31m   v1.25.3
+kind-lespot-worker2         Ready    <none>          31m   v1.25.3
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl apply -f deployment.yaml
+deployment.apps/mongodb-deployment created
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl get pods
+NAME                                  READY   STATUS    RESTARTS   AGE
+mongodb-deployment-69cfb59db6-x7njx   0/1     Pending   0          7s
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl describe deployments
+Name:                   mongodb-deployment
+Namespace:              default
+CreationTimestamp:      Wed, 08 Feb 2023 16:47:00 +0100
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=mongodb
+Replicas:               1 desired | 1 updated | 1 total | 0 available | 1 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=mongodb
+  Containers:
+   mongodb:
+    Image:        mongo:4.4
+    Port:         27017/TCP
+    Host Port:    0/TCP
+    Environment:  <none>
+    Mounts:
+      /data/db from mongodb-data (rw)
+  Volumes:
+   mongodb-data:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  mongodb-pvc
+    ReadOnly:   false
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      False   MinimumReplicasUnavailable
+  Progressing    True    ReplicaSetUpdated
+OldReplicaSets:  <none>
+NewReplicaSet:   mongodb-deployment-69cfb59db6 (1/1 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  18s   deployment-controller  Scaled up replica set mongodb-deployment-69cfb59db6 to 1
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl get pods
+NAME                                  READY   STATUS    RESTARTS   AGE
+mongodb-deployment-69cfb59db6-x7njx   0/1     Pending   0          38s
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl get deployments
+NAME                 READY   UP-TO-DATE   AVAILABLE   AGE
+
+###################### Выполнить развертывание любого приложения в кластере с помощью: - ReplicaSet.##################################
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl apply -f replicaset.yaml
+replicaset.apps/nginx created
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl get pods
+NAME          READY   STATUS              RESTARTS   AGE
+nginx-9cwqk   0/1     ContainerCreating   0          5s
+nginx-fmbp5   0/1     ContainerCreating   0          5s
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl get all
+NAME              READY   STATUS    RESTARTS   AGE
+pod/nginx-9cwqk   1/1     Running   0          64s
+pod/nginx-fmbp5   1/1     Running   0          64s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   73m
+
+NAME                    DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginx   2         2         2       64s
+
+###################### Выполнить развертывание любого приложения в кластере с помощью: - StatefulSet.##################################
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl apply -f statefulset.yaml
+statefulset.apps/web created
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl get statefulset 
+NAME   READY   AGE
+web    1/2     7s
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl get statefulset web
+NAME   READY   AGE
+web    2/2     13s
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl describe pod web
+Name:             web-0
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             kind-lespot-worker2/172.18.0.2
+Start Time:       Wed, 08 Feb 2023 17:33:24 +0100
+Labels:           app=nginx
+                  controller-revision-hash=web-69796cd97f
+                  statefulset.kubernetes.io/pod-name=web-0
+Annotations:      <none>
+Status:           Running
+IP:               10.244.1.4
+IPs:
+  IP:           10.244.1.4
+Controlled By:  StatefulSet/web
+Containers:
+  nginx:
+    Container ID:   containerd://53d92e408d0d5e9d0a688396b6f824b0dd22b630e57fe0930d416b2d9a9f3783
+    Image:          registry.k8s.io/nginx-slim:0.8
+    Image ID:       sha256:80df3455afab6379010336bb9b49df4f169943fa14e774cf5b2065ded75c95f3
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Wed, 08 Feb 2023 17:33:28 +0100
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-8zqj4 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  kube-api-access-8zqj4:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  45s   default-scheduler  Successfully assigned default/web-0 to kind-lespot-worker2
+  Normal  Pulling    44s   kubelet            Pulling image "registry.k8s.io/nginx-slim:0.8"
+  Normal  Pulled     41s   kubelet            Successfully pulled image "registry.k8s.io/nginx-slim:0.8" in 3.59521783s
+  Normal  Created    41s   kubelet            Created container nginx
+  Normal  Started    40s   kubelet            Started container nginx
+
+Name:             web-1
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             kind-lespot-worker/172.18.0.4
+Start Time:       Wed, 08 Feb 2023 17:33:30 +0100
+Labels:           app=nginx
+                  controller-revision-hash=web-69796cd97f
+                  statefulset.kubernetes.io/pod-name=web-1
+Annotations:      <none>
+Status:           Running
+IP:               10.244.2.3
+IPs:
+  IP:           10.244.2.3
+Controlled By:  StatefulSet/web
+Containers:
+  nginx:
+    Container ID:   containerd://2e98bd7f6fe4357e5d2b0b6aa40b7d700adcf523763201c2737f23d6d425b07d
+    Image:          registry.k8s.io/nginx-slim:0.8
+    Image ID:       sha256:80df3455afab6379010336bb9b49df4f169943fa14e774cf5b2065ded75c95f3
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Wed, 08 Feb 2023 17:33:35 +0100
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-l5s29 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  kube-api-access-l5s29:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  39s   default-scheduler  Successfully assigned default/web-1 to kind-lespot-worker
+  Normal  Pulling    39s   kubelet            Pulling image "registry.k8s.io/nginx-slim:0.8"
+  Normal  Pulled     34s   kubelet            Successfully pulled image "registry.k8s.io/nginx-slim:0.8" in 4.422692301s
+  Normal  Created    34s   kubelet            Created container nginx
+  Normal  Started    34s   kubelet            Started container nginx
+
+###################### Выполнить развертывание любого приложения в кластере с помощью: - DaemonSet.##################################
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl apply -f daemonset.yaml
+daemonset.apps/fluentd-elasticsearch unchanged
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl get all
+NAME        READY   STATUS    RESTARTS   AGE
+pod/web-0   1/1     Running   0          6m16s
+pod/web-1   1/1     Running   0          6m10s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   84m
+
+NAME                   READY   AGE
+statefulset.apps/web   2/2     6m17s
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl get all -owide -n kube-system
+NAME                                                    READY   STATUS    RESTARTS   AGE    IP           NODE                        NOMINATED NODE   READINESS GATES
+pod/coredns-565d847f94-444x5                            1/1     Running   0          85m    10.244.0.2   kind-lespot-control-plane   <none>           <none>
+pod/coredns-565d847f94-hwn28                            1/1     Running   0          85m    10.244.0.3   kind-lespot-control-plane   <none>           <none>
+pod/etcd-kind-lespot-control-plane                      1/1     Running   0          85m    172.18.0.3   kind-lespot-control-plane   <none>           <none>
+pod/fluentd-elasticsearch-6klg9                         1/1     Running   0          4m1s   10.244.0.5   kind-lespot-control-plane   <none>           <none>
+pod/fluentd-elasticsearch-tl4lp                         1/1     Running   0          4m1s   10.244.2.4   kind-lespot-worker          <none>           <none>
+pod/fluentd-elasticsearch-tnq22                         1/1     Running   0          4m1s   10.244.1.5   kind-lespot-worker2         <none>           <none>
+pod/kindnet-4xzk9                                       1/1     Running   0          85m    172.18.0.2   kind-lespot-worker2         <none>           <none>
+pod/kindnet-76t92                                       1/1     Running   0          85m    172.18.0.3   kind-lespot-control-plane   <none>           <none>
+pod/kindnet-bvg4t                                       1/1     Running   0          85m    172.18.0.4   kind-lespot-worker          <none>           <none>
+pod/kube-apiserver-kind-lespot-control-plane            1/1     Running   0          85m    172.18.0.3   kind-lespot-control-plane   <none>           <none>
+pod/kube-controller-manager-kind-lespot-control-plane   1/1     Running   0          85m    172.18.0.3   kind-lespot-control-plane   <none>           <none>
+pod/kube-proxy-sjjwx                                    1/1     Running   0          85m    172.18.0.2   kind-lespot-worker2         <none>           <none>
+pod/kube-proxy-vfkjz                                    1/1     Running   0          85m    172.18.0.3   kind-lespot-control-plane   <none>           <none>
+pod/kube-proxy-vfrvj                                    1/1     Running   0          85m    172.18.0.4   kind-lespot-worker          <none>           <none>
+pod/kube-scheduler-kind-lespot-control-plane            1/1     Running   0          85m    172.18.0.3   kind-lespot-control-plane   <none>           <none>
+
+NAME               TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)                  AGE   SELECTOR
+service/kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP,9153/TCP   85m   k8s-app=kube-dns
+
+NAME                                   DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE    CONTAINERS              IMAGES                                          SELECTOR
+daemonset.apps/fluentd-elasticsearch   3         3         3       3            3           <none>                   4m1s   fluentd-elasticsearch   quay.io/fluentd_elasticsearch/fluentd:v2.5.2    name=fluentd-elasticsearch
+daemonset.apps/kindnet                 3         3         3       3            3           <none>                   85m    kindnet-cni             docker.io/kindest/kindnetd:v20221004-44d545d1   app=kindnet
+daemonset.apps/kube-proxy              3         3         3       3            3           kubernetes.io/os=linux   85m    kube-proxy              registry.k8s.io/kube-proxy:v1.25.3              k8s-app=kube-proxy
+
+NAME                      READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                                   SELECTOR
+deployment.apps/coredns   2/2     2            2           85m   coredns      registry.k8s.io/coredns/coredns:v1.9.3   k8s-app=kube-dns
+
+NAME                                 DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES                                   SELECTOR
+replicaset.apps/coredns-565d847f94   2         2         2       85m   coredns      registry.k8s.io/coredns/coredns:v1.9.3   k8s-app=kube-dns,pod-template-hash=565d847f94
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ 
+
+###################### Выполнить развертывание любого приложения в кластере с помощью: - Job.##################################
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl apply -f job.yaml
+job.batch/pi created
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl get all
+NAME           READY   STATUS              RESTARTS   AGE
+pod/pi-p6jvm   0/1     ContainerCreating   0          4s
+pod/web-0      1/1     Running             0          9m22s
+pod/web-1      1/1     Running             0          9m16s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   87m
+
+NAME                   READY   AGE
+statefulset.apps/web   2/2     9m22s
+
+NAME           COMPLETIONS   DURATION   AGE
+job.batch/pi   0/1           4s         4s
+
+
+###################### Выполнить развертывание любого приложения в кластере с помощью: - CronJob.##################################
+lespot@lespotpc:~/TMS/K8S/Lesson46/k8s$ kubectl get all
+NAME                       READY   STATUS              RESTARTS   AGE
+pod/hello-27931245-vnwhj   0/1     ContainerCreating   0          1s
+pod/web-0                  1/1     Running             0          11m
+pod/web-1                  1/1     Running             0          11m
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   90m
+
+NAME                   READY   AGE
+statefulset.apps/web   2/2     11m
+
+NAME                  SCHEDULE    SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+cronjob.batch/hello   * * * * *   False     1        1s              3s
+
+NAME                       COMPLETIONS   DURATION   AGE
