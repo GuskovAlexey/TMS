@@ -26,20 +26,20 @@ kind: Deployment
 metadata:
   name: my-web-deployment2
   labels:
-    app : my-app-tomcat
+    app : my-app-nginx
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: my-app-tomcat
+      app: my-app-nginx
   template:
     metadata:
       labels:
-        app: my-app-tomcat 
+        app: my-app-nginx 
     spec:
       containers:
-        - name : tms-web-tomcat
-          image: tomcat:8.5.38
+        - name : tms-web-nginx
+          image: nginx:latest
           ports:
             - containerPort: 80
 
@@ -61,7 +61,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-service-tomcat
+  name: my-service-nginx
 spec:
   type: ClusterIP
   ports:
@@ -69,25 +69,30 @@ spec:
       port: 80
       targetPort: 80
   selector:
-    app: my-app-tomcat
+    app: my-app-nginx
 
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: my-app-ingress
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
-  - host: php.example.com
-    http:
+  - http:
       paths:
-      - backend:
-         serviceName: my-service-php
-         servicePort: 80
-
-  - host: tomcat.example.com
-    http:
-      paths:
-      - backend:
-         serviceName: my-service-tomcat
-         servicePort: 80
+      - pathType: Prefix
+        path: /foo(/|$)(.*)
+        backend:
+          service:
+            name: my-service-php
+            port:
+              number: 80
+      - pathType: Prefix
+        path: /bar(/|$)(.*)
+        backend:
+          service:
+            name: my-service-nginx
+            port:
+              number: 80
