@@ -1,0 +1,103 @@
+#######################Развернуть кластер Kubernetes с несколькими узлами.################
+lespot@lespotpc:~/Documents/K8S/Lesson47$ bash docker_machine_create.sh 
+Running pre-create checks...
+Creating machine...
+(tms-docker-machine) Launching instance...
+Waiting for machine to be running, this may take a few minutes...
+Detecting operating system of created instance...
+Waiting for SSH to be available...
+Detecting the provisioner...
+Provisioning with ubuntu(systemd)...
+Installing Docker...
+Copying certs to the local machine directory...
+Copying certs to the remote machine...
+Setting Docker configuration on the remote daemon...
+Checking connection to Docker...
+Docker is up and running!
+To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: docker-machine env tms-docker-machine
+lespot@lespotpc:~/Documents/K8S/Lesson47/Kind$ docker-machine env tms-docker-machine
+export DOCKER_TLS_VERIFY="1"
+export DOCKER_HOST="tcp://13.40.44.84:2376"
+export DOCKER_CERT_PATH="/home/lespot/.docker/machine/machines/tms-docker-machine"
+export DOCKER_MACHINE_NAME="tms-docker-machine"
+# Run this command to configure your shell: 
+# eval $(docker-machine env tms-docker-machine)
+lespot@lespotpc:~/Documents/K8S/Lesson47/Kind$ eval $(docker-machine env tms-docker-machine)
+lespot@lespotpc:~/Documents/K8S/Lesson47/Kind$ bash kind_create.sh 
+Creating cluster "kind-lespot" ...
+ ✓ Ensuring node image (kindest/node:v1.25.3) 🖼 
+ ✓ Preparing nodes 📦 📦 📦 📦  
+ ✓ Writing configuration 📜 
+ ✓ Starting control-plane 🕹️ 
+ ✓ Installing CNI 🔌 
+ ✓ Installing StorageClass 💾 
+ ✓ Joining worker nodes 🚜 
+Set kubectl context to "kind-kind-lespot"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-kind-lespot
+
+Thanks for using kind! 😊
+lespot@lespotpc:~/.kube$ kubectl cluster-info --context kind-kind-lespot
+Kubernetes control plane is running at https://13.40.44.84:6443
+CoreDNS is running at https://13.40.44.84:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+lespot@lespotpc:~/.kube$ 
+lespot@lespotpc:~/Documents/K8S/Lesson47/Kind$ kubectl get nodes
+NAME                        STATUS   ROLES           AGE   VERSION
+kind-lespot-control-plane   Ready    control-plane   12m   v1.25.3
+kind-lespot-worker          Ready    <none>          11m   v1.25.3
+kind-lespot-worker2         Ready    <none>          11m   v1.25.3
+kind-lespot-worker3         Ready    <none>          11m   v1.25.3
+
+
+################## - ClusterIP #########################
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl apply -f ClusterIP.yaml
+deployment.apps/my-web-deployment unchanged
+service/my-service unchanged
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl get svc
+NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP   87d
+my-service   ClusterIP   10.99.64.215   <none>        80/TCP    84s
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ minikube ssh
+Last login: Sun Feb 12 14:55:49 2023 from 192.168.49.1
+docker@minikube:~$ curl 10.99.64.215
+<h1> This WebPage was created by Kubernetes and Docker<h1><br>Server IP Address is 10.244.0.27<br><p>Made by <font color=blue>Alexey Guskovdocker@minikube:~$ 
+    
+################## - NodePort #########################
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl apply -f NodePort.yaml
+deployment.apps/my-web-deployment created
+service/my-service created
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl get svc
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP        87d
+my-service   NodePort    10.105.168.250   <none>        80:31514/TCP   6s
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ minikube service my-service
+|-----------|------------|-------------|---------------------------|
+| NAMESPACE |    NAME    | TARGET PORT |            URL            |
+|-----------|------------|-------------|---------------------------|
+| default   | my-service | http/80     | http://192.168.49.2:31514 |
+|-----------|------------|-------------|---------------------------|
+🎉  Opening service default/my-service in default browser...
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ Gtk-Message: 16:57:14.644: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+^C
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl get all
+NAME                                     READY   STATUS    RESTARTS      AGE
+pod/my-web-deployment-854df8b497-6zg47   1/1     Running   0             4m24s
+pod/my-web-deployment-854df8b497-725z5   1/1     Running   0             4m24s
+pod/my-web-deployment-854df8b497-779hh   1/1     Running   0             4m24s
+pod/new                                  1/1     Running   4 (28m ago)   25h
+
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP        87d
+service/my-service   NodePort    10.105.168.250   <none>        80:31514/TCP   4m24s
+
+NAME                                READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-web-deployment   3/3     3            3           4m24s
+
+NAME                                           DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-web-deployment-854df8b497   3         3         3       4m24s
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ 
+
+

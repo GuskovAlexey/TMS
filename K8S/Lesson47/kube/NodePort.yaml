@@ -1,0 +1,35 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: my-web-deployment
+  labels:
+    app : my-app 
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app   
+    spec:
+      containers:
+        - name : tms-web
+          image: alexeyguskov/k8s-php:latest
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  selector:
+    app: my-app
