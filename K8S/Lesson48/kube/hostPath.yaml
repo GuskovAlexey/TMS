@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: test-hostpath  
+spec:
+  selector:
+    matchLabels:
+      name: test-hostpath  
+  template:
+    metadata:
+      labels:
+        name: test-hostpath  
+    spec:
+      containers:
+      - name: test-hostpath  
+        image: alexeyguskov/k8s-php:latest
+        volumeMounts:
+        - mountPath: /var/www/html
+          name: test-dir
+        - mountPath: /var/www/html/testfile
+          name: test-file
+      volumes:
+      - name: test-dir
+        hostPath:       
+          path: /var/www/html
+          type: DirectoryOrCreate
+      - name: test-file
+        hostPath:
+          path: /var/www/html/testfile
+          type: FileOrCreate     
