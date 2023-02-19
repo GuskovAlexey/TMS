@@ -1,0 +1,290 @@
+################# EMPTYDIR  #######################
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl apply -f emptyDir.yaml 
+pod/empty created
+service/nginx created
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl describe  all
+Name:             empty
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Tue, 14 Feb 2023 17:14:14 +0100
+Labels:           app=empty
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.56
+IPs:
+  IP:  10.244.0.56
+Init Containers:
+  contant:
+    Container ID:  docker://ae4d96bed6ffad4d10b6a6112daaf12ac364d7f7ee805787269845806c4ab291
+    Image:         alpine/curl
+    Image ID:      docker-pullable://alpine/curl@sha256:81372de8c566f2d731bde924bed45230018e6d7c21d051c15e283eb8e06dfa2d
+    Port:          <none>
+    Host Port:     <none>
+    Args:
+      https://www.sheldonbrown.com/web_sample1.html
+      -o
+      /var/www/html/index.html
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Tue, 14 Feb 2023 17:14:17 +0100
+      Finished:     Tue, 14 Feb 2023 17:14:17 +0100
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-v4mdp (ro)
+      /var/www/html from emptydir (rw)
+Containers:
+  nginx:
+    Container ID:   docker://04aac7f8c4cb194ad09f26f67343d535e5388f97f909622cb54fcd1f1bf1d9b8
+    Image:          ubuntu/nginx:1.18-22.04_beta
+    Image ID:       docker-pullable://ubuntu/nginx@sha256:8de9a698b45b4deda7e55037ceab1a20259a92a45c76c0a789d20cae1de63a89
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Tue, 14 Feb 2023 17:14:18 +0100
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-v4mdp (ro)
+      /var/www/html from emptydir (rw)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  emptydir:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  kube-api-access-v4mdp:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  13s   default-scheduler  Successfully assigned default/empty to minikube
+  Normal  Pulling    12s   kubelet            Pulling image "alpine/curl"
+  Normal  Pulled     11s   kubelet            Successfully pulled image "alpine/curl" in 1.880641598s
+  Normal  Created    11s   kubelet            Created container contant
+  Normal  Started    10s   kubelet            Started container contant
+  Normal  Pulled     9s    kubelet            Container image "ubuntu/nginx:1.18-22.04_beta" already present on machine
+  Normal  Created    9s    kubelet            Created container nginx
+  Normal  Started    9s    kubelet            Started container nginx
+
+
+Name:              kubernetes
+Namespace:         default
+Labels:            component=apiserver
+                   provider=kubernetes
+Annotations:       <none>
+Selector:          <none>
+Type:              ClusterIP
+IP Family Policy:  SingleStack
+IP Families:       IPv4
+IP:                10.96.0.1
+IPs:               10.96.0.1
+Port:              https  443/TCP
+TargetPort:        8443/TCP
+Endpoints:         192.168.49.2:8443
+Session Affinity:  None
+Events:            <none>
+
+
+Name:                     nginx
+Namespace:                default
+Labels:                   <none>
+Annotations:              <none>
+Selector:                 app=empty
+Type:                     NodePort
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.102.216.39
+IPs:                      10.102.216.39
+Port:                     nginx  8080/TCP
+TargetPort:               80/TCP
+NodePort:                 nginx  30100/TCP
+Endpoints:                10.244.0.56:80
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ minikube service nginx
+|-----------|-------|-------------|---------------------------|
+| NAMESPACE | NAME  | TARGET PORT |            URL            |
+|-----------|-------|-------------|---------------------------|
+| default   | nginx | nginx/8080  | http://192.168.49.2:30100 |
+|-----------|-------|-------------|---------------------------|
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ curl http://192.168.49.2:30100 | grep "A Simple Sample Web Page"
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 82659  100 82659    0     0   183M      0 --:--:-- --:--:-- --:--:-- 78.8M
+<h1>A Simple Sample Web Page</h1>
+<a href="#h">&lt;H1&gt;</a>A Simple Sample Web Page<a href="#h">&lt;/H1&gt;</a></p><p>&nbsp;</p><p>&nbsp;
+
+#################################    hostPath      #################################
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ docker ps
+CONTAINER ID   IMAGE                                 COMMAND                  CREATED      STATUS          PORTS                                                                                                                                  NAMES
+19eafc5ffe79   gcr.io/k8s-minikube/kicbase:v0.0.36   "/usr/local/bin/entr…"   6 days ago   Up 46 minutes   127.0.0.1:32772->22/tcp, 127.0.0.1:32771->2376/tcp, 127.0.0.1:32770->5000/tcp, 127.0.0.1:32769->8443/tcp, 127.0.0.1:32768->32443/tcp   minikube
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ docker exec -it 19eafc5ffe79 bash
+root@minikube:/# cat /var/www/html/testfile.txt 
+Hostpath work
+root@minikube:/# exit
+exit
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl apply -f hostPath.yaml 
+daemonset.apps/test-hostpath created
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl get all
+NAME                      READY   STATUS    RESTARTS   AGE
+pod/test-hostpath-zsh77   1/1     Running   0          9s
+pod/test-pd               1/1     Running   0          20m
+
+NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP        90d
+service/nginx        NodePort    10.106.126.49   <none>        80:30100/TCP   20m
+
+NAME                           DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/test-hostpath   1         1         1       1            1           <none>          9s
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl get pods
+NAME                  READY   STATUS    RESTARTS   AGE
+test-hostpath-zsh77   1/1     Running   0          54s
+test-pd               1/1     Running   0          21m
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl exec -it test-hostpath-zsh77 bash
+kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
+bash-4.2# ls /var/www/html/
+testfile  testfile.txt
+bash-4.2# cd var/www/html/
+bash-4.2# ls
+testfile  testfile.txt
+bash-4.2# cat testfile.txt 
+Hostpath work
+bash-4.2# 
+
+#################################    configMap      #################################
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl apply -f configMap.yaml 
+pod/nginx created
+configmap/myconfig created
+service/nginx created
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl get all
+NAME        READY   STATUS    RESTARTS   AGE
+pod/nginx   1/1     Running   0          9s
+
+NAME                 TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+service/kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP          89d
+service/nginx        NodePort    10.104.70.63   <none>        8080:30100/TCP   9s
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ minikube service nginx
+|-----------|-------|-------------|---------------------------|
+| NAMESPACE | NAME  | TARGET PORT |            URL            |
+|-----------|-------|-------------|---------------------------|
+| default   | nginx | nginx/8080  | http://192.168.49.2:30100 |
+|-----------|-------|-------------|---------------------------|
+🎉  Opening service default/nginx in default browser...
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ Gtk-Message: 17:42:15.134: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+^C
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ curl http://192.168.49.2:30100
+<h1>Hello World</h1>
+
+###################### Secret ############################
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl apply -f secret.yaml 
+secret/mysecret created
+pod/secret-test-pod created
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl describe secret mysecret
+Name:         mysecret
+Namespace:    default
+Labels:       <none>
+Annotations:  <none>
+
+Type:  Opaque
+
+Data
+====
+DB_PASSWORD:  8 bytes
+DB_USERNAME:  5 bytes
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl logs secret-test-pod
+KUBERNETES_PORT=tcp://10.96.0.1:443
+KUBERNETES_SERVICE_PORT=443
+HOSTNAME=secret-test-pod
+SHLVL=1
+HOME=/root
+DB_USERNAME=admin
+KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+KUBERNETES_PORT_443_TCP_PORT=443
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+KUBERNETES_SERVICE_PORT_HTTPS=443
+PWD=/
+KUBERNETES_SERVICE_HOST=10.96.0.1
+DB_PASSWORD=password
+
+################### persistantVolume ###########################
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ docker ps
+CONTAINER ID   IMAGE                                 COMMAND                  CREATED      STATUS       PORTS                                                                                                                                  NAMES
+19eafc5ffe79   gcr.io/k8s-minikube/kicbase:v0.0.36   "/usr/local/bin/entr…"   7 days ago   Up 2 hours   127.0.0.1:32772->22/tcp, 127.0.0.1:32771->2376/tcp, 127.0.0.1:32770->5000/tcp, 127.0.0.1:32769->8443/tcp, 127.0.0.1:32768->32443/tcp   minikube
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ docker exec -it 19eafc5ffe79 bash
+root@minikube:/# cd /data
+root@minikube:/data# echo "<h2> PVC is WORK </h2>" > index.html
+root@minikube:/data# ls
+index.html
+root@minikube:/data# exit
+exit
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl apply -f pv.yaml 
+persistentvolume/rwo-pv created
+persistentvolume/rox-pv created
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl get pv
+NAME     CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
+rox-pv   2Gi        ROX            Recycle          Available           standart                6s
+rwo-pv   2Gi        RWO            Recycle          Available           standart                6s
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl apply -f pvc.yaml 
+pod/my-pod created
+pod/my-pod2 created
+persistentvolumeclaim/my-pvc created
+persistentvolumeclaim/my-pvc2 created
+service/nginx created
+service/nginx2 created
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl get pv
+NAME     CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM             STORAGECLASS   REASON   AGE
+rox-pv   2Gi        ROX            Recycle          Bound    default/my-pvc    standart                24s
+rwo-pv   2Gi        RWO            Recycle          Bound    default/my-pvc2   standart                24s
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ kubectl get pvc
+NAME      STATUS   VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+my-pvc    Bound    rox-pv   2Gi        ROX            standart       11s
+my-pvc2   Bound    rwo-pv   2Gi        RWO            standart       11s
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ minikube service --all
+|-----------|------------|-------------|--------------|
+| NAMESPACE |    NAME    | TARGET PORT |     URL      |
+|-----------|------------|-------------|--------------|
+| default   | kubernetes |             | No node port |
+|-----------|------------|-------------|--------------|
+😿  service default/kubernetes has no node port
+|-----------|-------|-------------|---------------------------|
+| NAMESPACE | NAME  | TARGET PORT |            URL            |
+|-----------|-------|-------------|---------------------------|
+| default   | nginx | nginx/80    | http://192.168.49.2:30100 |
+|-----------|-------|-------------|---------------------------|
+|-----------|--------|-------------|---------------------------|
+| NAMESPACE |  NAME  | TARGET PORT |            URL            |
+|-----------|--------|-------------|---------------------------|
+| default   | nginx2 | nginx/8080  | http://192.168.49.2:30101 |
+|-----------|--------|-------------|---------------------------|
+🎉  Opening service default/nginx in default browser...
+🎉  Opening service default/nginx2 in default browser...
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ Gtk-Message: 15:21:42.912: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+Gtk-Message: 15:21:42.912: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+^C
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ curl http://192.168.49.2:30100
+<h2> PVC is WORK </h2>
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ curl http://192.168.49.2:30101
+<h2> PVC is WORK </h2>
+lespot@lespotpc:~/Documents/K8S/Lesson48/kube$ 

@@ -1,0 +1,30 @@
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: rwo-pv
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: standart
+  hostPath:
+    path: /data
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: rox-pv
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: standart
+  hostPath:
+    path: /data

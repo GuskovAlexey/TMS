@@ -1,0 +1,98 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: my-web-deployment
+  labels:
+    app : my-app-php
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-app-php
+  template:
+    metadata:
+      labels:
+        app: my-app-php
+    spec:
+      containers:
+        - name : tms-web-php
+          image: alexeyguskov/k8s-php:latest
+          ports:
+            - containerPort: 80
+
+---
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: my-web-deployment2
+  labels:
+    app : my-app-nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-app-nginx
+  template:
+    metadata:
+      labels:
+        app: my-app-nginx 
+    spec:
+      containers:
+        - name : tms-web-nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service-php
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  selector:
+    app: my-app-php
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service-nginx
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  selector:
+    app: my-app-nginx
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: /foo(/|$)(.*)
+        backend:
+          service:
+            name: my-service-php
+            port:
+              number: 80
+      - pathType: Prefix
+        path: /bar(/|$)(.*)
+        backend:
+          service:
+            name: my-service-nginx
+            port:
+              number: 80

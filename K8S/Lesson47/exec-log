@@ -1,0 +1,210 @@
+#######################Развернуть кластер Kubernetes с несколькими узлами.################
+lespot@lespotpc:~/Documents/K8S/Lesson47$ bash docker_machine_create.sh 
+Running pre-create checks...
+Creating machine...
+(tms-docker-machine) Launching instance...
+Waiting for machine to be running, this may take a few minutes...
+Detecting operating system of created instance...
+Waiting for SSH to be available...
+Detecting the provisioner...
+Provisioning with ubuntu(systemd)...
+Installing Docker...
+Copying certs to the local machine directory...
+Copying certs to the remote machine...
+Setting Docker configuration on the remote daemon...
+Checking connection to Docker...
+Docker is up and running!
+To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: docker-machine env tms-docker-machine
+lespot@lespotpc:~/Documents/K8S/Lesson47/Kind$ docker-machine env tms-docker-machine
+export DOCKER_TLS_VERIFY="1"
+export DOCKER_HOST="tcp://13.40.44.84:2376"
+export DOCKER_CERT_PATH="/home/lespot/.docker/machine/machines/tms-docker-machine"
+export DOCKER_MACHINE_NAME="tms-docker-machine"
+# Run this command to configure your shell: 
+# eval $(docker-machine env tms-docker-machine)
+lespot@lespotpc:~/Documents/K8S/Lesson47/Kind$ eval $(docker-machine env tms-docker-machine)
+lespot@lespotpc:~/Documents/K8S/Lesson47/Kind$ bash kind_create.sh 
+Creating cluster "kind-lespot" ...
+ ✓ Ensuring node image (kindest/node:v1.25.3) 🖼 
+ ✓ Preparing nodes 📦 📦 📦 📦  
+ ✓ Writing configuration 📜 
+ ✓ Starting control-plane 🕹️ 
+ ✓ Installing CNI 🔌 
+ ✓ Installing StorageClass 💾 
+ ✓ Joining worker nodes 🚜 
+Set kubectl context to "kind-kind-lespot"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-kind-lespot
+
+Thanks for using kind! 😊
+lespot@lespotpc:~/.kube$ kubectl cluster-info --context kind-kind-lespot
+Kubernetes control plane is running at https://13.40.44.84:6443
+CoreDNS is running at https://13.40.44.84:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+lespot@lespotpc:~/.kube$ 
+lespot@lespotpc:~/Documents/K8S/Lesson47/Kind$ kubectl get nodes
+NAME                        STATUS   ROLES           AGE   VERSION
+kind-lespot-control-plane   Ready    control-plane   12m   v1.25.3
+kind-lespot-worker          Ready    <none>          11m   v1.25.3
+kind-lespot-worker2         Ready    <none>          11m   v1.25.3
+kind-lespot-worker3         Ready    <none>          11m   v1.25.3
+
+
+################## - ClusterIP #########################
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl apply -f ClusterIP.yaml
+deployment.apps/my-web-deployment unchanged
+service/my-service unchanged
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl get svc
+NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP   87d
+my-service   ClusterIP   10.99.64.215   <none>        80/TCP    84s
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ minikube ssh
+Last login: Sun Feb 12 14:55:49 2023 from 192.168.49.1
+docker@minikube:~$ curl 10.99.64.215
+<h1> This WebPage was created by Kubernetes and Docker<h1><br>Server IP Address is 10.244.0.27<br><p>Made by <font color=blue>Alexey Guskovdocker@minikube:~$ 
+    
+################## - NodePort #########################
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl apply -f NodePort.yaml
+deployment.apps/my-web-deployment created
+service/my-service created
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl get svc
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP        87d
+my-service   NodePort    10.105.168.250   <none>        80:31514/TCP   6s
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ minikube service my-service
+|-----------|------------|-------------|---------------------------|
+| NAMESPACE |    NAME    | TARGET PORT |            URL            |
+|-----------|------------|-------------|---------------------------|
+| default   | my-service | http/80     | http://192.168.49.2:31514 |
+|-----------|------------|-------------|---------------------------|
+🎉  Opening service default/my-service in default browser...
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ Gtk-Message: 16:57:14.644: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+^C
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl get all
+NAME                                     READY   STATUS    RESTARTS      AGE
+pod/my-web-deployment-854df8b497-6zg47   1/1     Running   0             4m24s
+pod/my-web-deployment-854df8b497-725z5   1/1     Running   0             4m24s
+pod/my-web-deployment-854df8b497-779hh   1/1     Running   0             4m24s
+pod/new                                  1/1     Running   4 (28m ago)   25h
+
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP        87d
+service/my-service   NodePort    10.105.168.250   <none>        80:31514/TCP   4m24s
+
+NAME                                READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-web-deployment   3/3     3            3           4m24s
+
+NAME                                           DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-web-deployment-854df8b497   3         3         3       4m24s
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ 
+
+################################# INGRESS ###################################
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl get all
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   37m
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl apply -f Ingress_controller.yaml 
+namespace/ingress-nginx created
+serviceaccount/ingress-nginx created
+serviceaccount/ingress-nginx-admission created
+role.rbac.authorization.k8s.io/ingress-nginx created
+role.rbac.authorization.k8s.io/ingress-nginx-admission created
+clusterrole.rbac.authorization.k8s.io/ingress-nginx created
+clusterrole.rbac.authorization.k8s.io/ingress-nginx-admission created
+rolebinding.rbac.authorization.k8s.io/ingress-nginx created
+rolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+configmap/ingress-nginx-controller created
+service/ingress-nginx-controller created
+service/ingress-nginx-controller-admission created
+daemonset.apps/ingress-nginx-controller created
+job.batch/ingress-nginx-admission-create created
+job.batch/ingress-nginx-admission-patch created
+ingressclass.networking.k8s.io/nginx created
+validatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl describe ingress ingress-nginx 
+Error from server (NotFound): ingresses.networking.k8s.io "ingress-nginx" not found
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl get all -n ingress-nginx 
+NAME                                       READY   STATUS      RESTARTS   AGE
+pod/ingress-nginx-admission-create-cdd2m   0/1     Completed   0          42s
+pod/ingress-nginx-admission-patch-s7qpp    0/1     Completed   0          42s
+pod/ingress-nginx-controller-ckxwh         1/1     Running     0          42s
+
+NAME                                         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
+service/ingress-nginx-controller             NodePort    10.96.103.16    <none>        80:31680/TCP,443:31198/TCP   43s
+service/ingress-nginx-controller-admission   ClusterIP   10.96.123.188   <none>        443/TCP                      43s
+
+NAME                                      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR                               AGE
+daemonset.apps/ingress-nginx-controller   1         1         1       1            1           ingress-ready=true,kubernetes.io/os=linux   42s
+
+NAME                                       COMPLETIONS   DURATION   AGE
+job.batch/ingress-nginx-admission-create   1/1           6s         43s
+job.batch/ingress-nginx-admission-patch    1/1           7s         43s
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl get all -n ingress-nginx -owide
+NAME                                       READY   STATUS      RESTARTS   AGE   IP           NODE                  NOMINATED NODE   READINESS GATES
+pod/ingress-nginx-admission-create-cdd2m   0/1     Completed   0          58s   10.244.2.8   kind-lespot-worker2   <none>           <none>
+pod/ingress-nginx-admission-patch-s7qpp    0/1     Completed   0          58s   10.244.3.6   kind-lespot-worker3   <none>           <none>
+pod/ingress-nginx-controller-ckxwh         1/1     Running     0          58s   10.244.1.6   kind-lespot-worker    <none>           <none>
+
+NAME                                         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE   SELECTOR
+service/ingress-nginx-controller             NodePort    10.96.103.16    <none>        80:31680/TCP,443:31198/TCP   59s   app.kubernetes.io/component=controller,app.kubernetes.io/instance=ingress-nginx,app.kubernetes.io/name=ingress-nginx
+service/ingress-nginx-controller-admission   ClusterIP   10.96.123.188   <none>        443/TCP                      59s   app.kubernetes.io/component=controller,app.kubernetes.io/instance=ingress-nginx,app.kubernetes.io/name=ingress-nginx
+
+NAME                                      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR                               AGE   CONTAINERS   IMAGES                                                                                                                    SELECTOR
+daemonset.apps/ingress-nginx-controller   1         1         1       1            1           ingress-ready=true,kubernetes.io/os=linux   58s   controller   registry.k8s.io/ingress-nginx/controller:v1.5.1@sha256:4ba73c697770664c1e00e9f968de14e08f606ff961c76e5d7033a4a9c593c629   app.kubernetes.io/component=controller,app.kubernetes.io/instance=ingress-nginx,app.kubernetes.io/name=ingress-nginx
+
+NAME                                       COMPLETIONS   DURATION   AGE   CONTAINERS   IMAGES                                                                                                                                            SELECTOR
+job.batch/ingress-nginx-admission-create   1/1           6s         59s   create       registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343@sha256:39c5b2e3310dc4264d638ad28d9d1d96c4cbb2b2dcfb52368fe4e3c63f61e10f   controller-uid=caaf2d9f-4829-4e00-b2d7-a9c529d97ccf
+job.batch/ingress-nginx-admission-patch    1/1           7s         59s   patch        registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343@sha256:39c5b2e3310dc4264d638ad28d9d1d96c4cbb2b2dcfb52368fe4e3c63f61e10f   controller-uid=8c2a5c43-4121-449f-bfc2-785cd3d0f026
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl apply -f ingress.yaml 
+deployment.apps/my-web-deployment created
+deployment.apps/my-web-deployment2 created
+service/my-service-php created
+service/my-service-nginx created
+ingress.networking.k8s.io/example-ingress created
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ kubectl describe ingress
+Name:             example-ingress
+Labels:           <none>
+Namespace:        default
+Address:          
+Ingress Class:    <none>
+Default backend:  <default>
+Rules:
+  Host        Path  Backends
+  ----        ----  --------
+  *           
+              /foo(/|$)(.*)   my-service-php:80 (10.244.2.9:80,10.244.3.7:80)
+              /bar(/|$)(.*)   my-service-nginx:80 (10.244.1.7:80,10.244.3.8:80)
+Annotations:  nginx.ingress.kubernetes.io/rewrite-target: /$2
+Events:
+  Type    Reason  Age   From                      Message
+  ----    ------  ----  ----                      -------
+  Normal  Sync    39s   nginx-ingress-controller  Scheduled for sync
+
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ curl http://3.10.20.204/foo 
+<h1> This WebPage was created by Kubernetes and Docker<h1><br>Server IP Address is 10.244.3.7<br><p>Made by <font color=blue>Alexey Guskov
+lespot@lespotpc:~/Documents/K8S/Lesson47/kube$ curl http://3.10.20.204/bar
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
