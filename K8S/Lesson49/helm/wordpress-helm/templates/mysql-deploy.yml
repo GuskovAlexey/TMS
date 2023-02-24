@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-db
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  ports:
+    - port: {{ .Values.db.port }}
+  selector:
+    app: {{ .Release.Name }}
+    tier: {{ .Release.Name }}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      tier: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        tier: {{ .Values.db.name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}
+          image: {{ .Values.db.image }}:{{ .Values.db.version }}
+          resources:
+            requests:
+              cpu: {{ .Values.dbdeploy.reqcpu }}
+              memory: {{ .Values.dbdeploy.reqmem }}
+            limits:
+              cpu: {{ .Values.dbdeploy.limcpu }}
+              memory: {{ .Values.dbdeploy.limem }}
+          env:
+          - name: {{ .Values.dbdeploy.passwdRootEnvName }}
+            value: {{ .Values.dbdeploy.passwdRootEnvValue }}
+          - name: {{ .Values.dbdeploy.dbNameEnvName }}
+            value: {{ .Values.dbdeploy.dbNameEnvValue }}
+          - name: {{ .Values.dbdeploy.dbUserEnvName }}
+            value: {{ .Values.dbdeploy.dbUserEnvValue }}
+          - name: {{ .Values.dbdeploy.passwdDbEnvName }}
+            value: {{ .Values.dbdeploy.passwdDbEnvValue }}
+          ports:
+            - containerPort: {{ .Values.db.por }}
+          volumeMounts:
+            - name: {{ .Release.Name }}-persistent-storage
+              mountPath: {{ .Values.dbdeploy.volumeMountPath }}
+      volumes:
+        - name: {{ .Release.Name }}-persistent-storage
+          persistentVolumeClaim:
+            claimName: db-pvc
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}-hpa
+  namespace: 
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Release.Name }}
+  minReplicas: {{ .Values.dbhpa.MinRep }}
+  maxReplicas: {{ .Values.dbhpa.MaxRep }}
+  metrics:
+    - type: {{ .Values.dbhpa.MetricsType }}
+      resource:
+        name: {{ .Values.dbhpa.MetricsResourceCpuName }}
+        target:
+          type: {{ .Values.dbhpa.MetricsResourceTargetType }}
+          averageUtilization: {{ .Values.dbhpa.CpuAverage }}
+    - type: {{ .Values.dbhpa.MetricsType }}
+      resource:
+        name: {{ .Values.dbhpa.MetricsResourceMemName }}
+        target:
+          type: {{ .Values.dbhpa.MetricsResourceTargetType }}
+          averageUtilization: {{ .Values.dbhpa.MemAverage }}
