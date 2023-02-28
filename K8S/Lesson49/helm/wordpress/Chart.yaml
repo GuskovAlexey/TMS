@@ -1,6 +1,0 @@
-apiVersion: v2
-name: wordpress
-version: "0.1"
-appVersion: "1.1"
-description: "Wordpress App using Helm Chart"
-

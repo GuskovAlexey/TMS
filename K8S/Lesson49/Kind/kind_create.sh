@@ -1,13 +1,6 @@
-
 #! /bin/env bash
-export DOCKER_HOST_IP="172.31.24.204"
-export DOCKER_HOST_EXTERNAL_IP="18.170.52.49"
-export POD_SUBNET="10.240.0.0/16"
-export SERVICE_SUBNET="10.0.0.0/16"
-export VOLUME_NODE1_HOST="/tmp/data-worker/"
-export VOLUME_NODE1_CONTAINER="/data"
-export VOLUME_NODE2_HOST="/tmp/data-worker2/"
-export VOLUME_NODE2_CONTAINER="/data"
+
+source ./env.sh
 
 # create kind cluster
 envsubst < config.yaml | kind create cluster --config=-
@@ -25,11 +18,17 @@ kubectl --insecure-skip-tls-verify apply -f calico.yaml
 echo "Scale down coreNDS..."
 kubectl --insecure-skip-tls-verify scale deployment --replicas 1 coredns --namespace kube-system
 
+# install Nginx ingress controller
+echo "Install Ingress NGINX..."
+kubectl --insecure-skip-tls-verify apply -f ingress_controller.yaml
+
+# install Metrics-server
+echo "Install Metrics-server..."
+kubectl --insecure-skip-tls-verify apply -f metrics-server.yaml
+
 # get kubernetes cluster info
 kubectl --insecure-skip-tls-verify cluster-info
 
-# change pod for kubectl top and for hpa that to work
-kubectl --insecure-skip-tls-verify apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
-
-
+# add alias
 # alias kubectl='kubectl --insecure-skip-tls-verify' 
+# alias helm='helm --kube-insecure-skip-tls-verify' 

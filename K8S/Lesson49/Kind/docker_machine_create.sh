@@ -3,9 +3,9 @@
 docker-machine create \
 	--driver amazonec2 \
 	--amazonec2-region eu-west-2 \
-	--amazonec2-ami ami-0f9124f7452cdb2a6  \
+	--amazonec2-zone "a" \
+	--amazonec2-ami ami-038d76c4d28805c09 \
 	--amazonec2-instance-type t2.medium \
-    --amazonec2-ssh-keypath ~/.ssh/id_ed25519 \
 	--amazonec2-open-port 30100 \
 	--amazonec2-open-port 80 \
 	--amazonec2-open-port 8080 \

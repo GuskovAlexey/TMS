@@ -9,7 +9,7 @@ spec:
       app: {{ .Release.Name }}
       tier: {{ .Values.db.name }}
   policyTypes:
-    - {{ .Values.networkpolicy.policyType}}
+    - {{ .Values.networkpolicy.policyType }}
   ingress:
     - from:
         - podSelector:

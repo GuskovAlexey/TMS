@@ -1,29 +1,26 @@
-
+---
 namespace: dev
-
-
 
 db:
   name: mysql
   port: 3306
   image: mariadb
-  version: ""
+  version: latest
 
 dbdeploy:
   passwdRootEnvName: MARIADB_ROOT_PASSWORD
   passwdRootEnvValue: "111111aA"
   dbNameEnvName: MARIADB_DATABASE
-  dbNameEnvValue: "wordpress"
+  dbNameEnvValue: wordpress
   dbUserEnvName: MARIADB_USER
-  dbUserEnvValue: "wordpress"
+  dbUserEnvValue: wordpress
   passwdDbEnvName: MARIADB_PASSWORD
-  passwdDbEnvValue: "11111111"
-  reqcpu: "100m"
-  limcpu: "200m"
-  reqmem: "100Mi"
-  limmem: "200Mi"
+  reqcpu: 100m
+  limcpu: 100m
+  reqmem: 300Mi
+  limmem: 300Mi
   volumeMountPath: /var/lib/mysql
-  #PersistentVolumeClaimName: db-pvc
+#PersistentVolumeClaimName: db-pvc
 
 
 dbhpa:
@@ -41,18 +38,18 @@ wp:
   tier: frontend
   port: 80
   strategyType: Recreate
-  image: wordpress
-  imageVersion: 5.9.2-php8.0
+  image: wordpress:5.9.2-php8.0
   envDbHostName: WORDPRESS_DB_HOST
   envDbName: WORDPRESS_DB_NAME
   envDbUser: WORDPRESS_DB_USER
   envDbPasswd: WORDPRESS_DB_PASSWORD
-  reqcpu: "100m"
-  limcpu: "200m"
-  reqmem: "100Mi"
-  limmem: "200Mi"
+  envSecretKeyRefKey: password
+  reqcpu: 100m
+  limcpu: 200m
+  reqmem: 200Mi
+  limmem: 300Mi
   volumeMountPath: /var/www/html
-  #PersistentVolumeClaimName: wp-pvc
+#PersistentVolumeClaimName: wp-pvc
 
 wphpa:
   MinRep: 1
@@ -69,3 +66,9 @@ networkpolicy:
   policyType: Ingress
   protocol: TCP
   port: 3306
+
+
+secret:
+  name: mysql-pass
+  type: Opaque
+  password: K8d1c3sU

@@ -1,0 +1,36 @@
+lespot@lespotpc:~/test/Lesson49$ kubectl get nodes
+NAME                 STATUS   ROLES           AGE   VERSION
+kind-control-plane   Ready    control-plane   73m   v1.25.3
+kind-worker          Ready    <none>          73m   v1.25.3
+kind-worker2         Ready    <none>          73m   v1.25.3
+lespot@lespotpc:~/test/Lesson49$ kubectl get pvc -n dev
+NAME     STATUS   VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+db-pvc   Bound    pv-db    2Gi        RWO                           70m
+wp-pvc   Bound    pv-wp    2Gi        RWO                           70m
+lespot@lespotpc:~/test/Lesson49$ helm install wordpress wordpress-helm/
+NAME: wordpress
+LAST DEPLOYED: Mon Feb 27 22:22:01 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+lespot@lespotpc:~/test/Lesson49$ kubectl get all -n dev
+NAME                            READY   STATUS    RESTARTS   AGE
+pod/mysql-579b5d4cd4-2f4qn      1/1     Running   0          8s
+pod/wordpress-8796b785b-tvrnl   1/1     Running   0          8s
+
+NAME                        TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+service/wordpress-db        ClusterIP   10.0.183.121   <none>        3306/TCP   8s
+service/wordpress-service   ClusterIP   10.0.139.73    <none>        80/TCP     8s
+
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/mysql       1/1     1            1           8s
+deployment.apps/wordpress   1/1     1            1           8s
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/mysql-579b5d4cd4      1         1         1       8s
+replicaset.apps/wordpress-8796b785b   1         1         1       8s
+
+NAME                                                REFERENCE              TARGETS                        MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/mysql-hpa       Deployment/mysql       <unknown>/70%, <unknown>/70%   1         3         0          8s
+horizontalpodautoscaler.autoscaling/wordpress-hpa   Deployment/wordpress   <unknown>/70%, <unknown>/70%   1         3         0          8s

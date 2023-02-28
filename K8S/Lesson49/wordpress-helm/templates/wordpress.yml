@@ -7,7 +7,7 @@ metadata:
     app: {{ .Release.Name }}
 spec:
   ports:
-    - port: {{ .Values.wp.port}}
+    - port: {{ .Values.wp.port }}
   selector:
     app: {{ .Release.Name }}
 ---
@@ -30,25 +30,28 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}
-        tier: {{ .Values.wp.tier}}
+        tier: {{ .Values.wp.tier }}
     spec:
       containers:
-        - name: {{ .Release.Name }}
-          image: {{ .Values.wp.image }}:{{ .Values.wp.imageVersion }}
+        - image: {{ .Values.wp.image }}
+          name: {{ .Release.Name }}
           ports:
-            - containerPort: {{ .Values.wp.port}}
+            - containerPort: {{ .Values.wp.port }}
           env:
             - name: {{ .Values.wp.envDbHostName }}
               value: {{ .Release.Name }}-service
             - name: {{ .Values.wp.envDbName }}
-              value: {{ .Value.dbdeploy.passwdRootEnvValue }}
+              value: {{ .Values.dbdeploy.passwdRootEnvValue }}
             - name: {{ .Values.wp.envDbUser }}
-              value: {{ .Value.dbdeploy.dbUserEnvName }}
+              value: {{ .Values.dbdeploy.dbUserEnvName }}
             - name: {{ .Values.wp.envDbPasswd }}
-              value: {{ .Value.dbdeploy.passwdDbEnvValue }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.name }}
+                  key: {{ .Values.wp.envSecretKeyRefKey }}
           resources:
             requests:
-              memory: {{ .Values.wp.reqmem}}
+              memory: {{ .Values.wp.reqmem }}
               cpu: {{ .Values.wp.reqcpu }}
             limits:
               memory: {{ .Values.wp.limmem }}
@@ -77,7 +80,7 @@ spec:
   metrics:
     - type: {{ .Values.wphpa.MetricsType }}
       resource:
-        name: {{ .Value.wphpa.MetricsResourceCpuName }}
+        name: {{ .Values.wphpa.MetricsResourceCpuName }}
         target:
           type: {{ .Values.wphpa.MetricsResourceTargetType }}
           averageUtilization: {{ .Values.wphpa.CpuAverage }}

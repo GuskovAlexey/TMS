@@ -1,7 +1,8 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-db
+  name: {{ .Values.db.name }}-db
   namespace: {{ .Values.namespace }}
   labels:
     app: {{ .Release.Name }}
@@ -10,13 +11,13 @@ spec:
     - port: {{ .Values.db.port }}
   selector:
     app: {{ .Release.Name }}
-    tier: {{ .Release.Name }}
+    tier: {{ .Values.db.name }}
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ .Values.db.name }}
   namespace: {{ .Values.namespace }}
   labels:
     app: {{ .Release.Name }}
@@ -24,7 +25,7 @@ spec:
   selector:
     matchLabels:
       app: {{ .Release.Name }}
-      tier: {{ .Release.Name }}
+      tier: {{ .Values.db.name }}
   template:
     metadata:
       labels:
@@ -33,14 +34,14 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}
-          image: {{ .Values.db.image }}:{{ .Values.db.version }}
+          image: {{ .Values.db.image }}
           resources:
             requests:
               cpu: {{ .Values.dbdeploy.reqcpu }}
               memory: {{ .Values.dbdeploy.reqmem }}
             limits:
               cpu: {{ .Values.dbdeploy.limcpu }}
-              memory: {{ .Values.dbdeploy.limem }}
+              memory: {{ .Values.dbdeploy.limmem }}
           env:
           - name: {{ .Values.dbdeploy.passwdRootEnvName }}
             value: {{ .Values.dbdeploy.passwdRootEnvValue }}
@@ -49,9 +50,12 @@ spec:
           - name: {{ .Values.dbdeploy.dbUserEnvName }}
             value: {{ .Values.dbdeploy.dbUserEnvValue }}
           - name: {{ .Values.dbdeploy.passwdDbEnvName }}
-            value: {{ .Values.dbdeploy.passwdDbEnvValue }}
+            valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.name }}
+                  key: {{ .Values.wp.envSecretKeyRefKey }}
           ports:
-            - containerPort: {{ .Values.db.por }}
+            - containerPort: {{ .Values.db.port }}
           volumeMounts:
             - name: {{ .Release.Name }}-persistent-storage
               mountPath: {{ .Values.dbdeploy.volumeMountPath }}
@@ -65,13 +69,13 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Release.Name }}-hpa
-  namespace: 
+  name: {{ .Values.db.name }}-hpa
+  namespace: {{ .Values.namespace }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Release.Name }}
+    name: {{ .Values.db.name }}
   minReplicas: {{ .Values.dbhpa.MinRep }}
   maxReplicas: {{ .Values.dbhpa.MaxRep }}
   metrics:
