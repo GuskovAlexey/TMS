@@ -1,0 +1,74 @@
+---
+namespace: dev
+
+db:
+  name: mysql
+  port: 3306
+  image: mariadb
+  version: latest
+
+dbdeploy:
+  passwdRootEnvName: MARIADB_ROOT_PASSWORD
+  passwdRootEnvValue: "111111aA"
+  dbNameEnvName: MARIADB_DATABASE
+  dbNameEnvValue: wordpress
+  dbUserEnvName: MARIADB_USER
+  dbUserEnvValue: wordpress
+  passwdDbEnvName: MARIADB_PASSWORD
+  reqcpu: 100m
+  limcpu: 100m
+  reqmem: 300Mi
+  limmem: 300Mi
+  volumeMountPath: /var/lib/mysql
+#PersistentVolumeClaimName: db-pvc
+
+
+dbhpa:
+  MinRep: 1
+  MaxRep: 3
+  MetricsType: Resource
+  MetricsResourceCpuName: cpu
+  MetricsResourceMemName: memory
+  MetricsResourceTargetType: Utilization
+  CpuAverage: 70
+  MemAverage: 70
+
+
+wp:
+  tier: frontend
+  port: 80
+  strategyType: Recreate
+  image: wordpress:5.9.2-php8.0
+  envDbHostName: WORDPRESS_DB_HOST
+  envDbName: WORDPRESS_DB_NAME
+  envDbUser: WORDPRESS_DB_USER
+  envDbPasswd: WORDPRESS_DB_PASSWORD
+  envSecretKeyRefKey: password
+  reqcpu: 100m
+  limcpu: 200m
+  reqmem: 200Mi
+  limmem: 300Mi
+  volumeMountPath: /var/www/html
+#PersistentVolumeClaimName: wp-pvc
+
+wphpa:
+  MinRep: 1
+  MaxRep: 3
+  MetricsType: Resource
+  MetricsResourceCpuName: cpu
+  MetricsResourceMemName: memory
+  MetricsResourceTargetType: Utilization
+  CpuAverage: 70
+  MemAverage: 70
+
+networkpolicy:
+  name: np-wp
+  policyType: Ingress
+  protocol: TCP
+  port: 3306
+
+
+secret:
+  name: mysql-pass
+  type: Opaque
+  password: K8d1c3sU
